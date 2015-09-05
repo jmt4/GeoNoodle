@@ -54,14 +54,14 @@ namespace MvcAuth
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+            app.UseFacebookAuthentication(
+               appId: "939208689453710",
+               appSecret: "8d3816d1980b0edfc501a9fbf29b0432");
 
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
-                ClientId = "******",
-                ClientSecret = "*****"
+                ClientId = "871760558951-38f2nsqf5fcb8b7vbni0m6qibk7rq65r.apps.googleusercontent.com",
+                ClientSecret = "3uFVnLg_nAvb_C0D1Zzbhxy1"
             });
         }
     }
