@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcAuth", "MvcAuth\MvcAuth.csproj", "{BD2E4B90-280D-4BE2-B8AC-051FA0F82280}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{671AB3AD-5122-4E5B-BA73-7B462FD89361}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{BD2E4B90-280D-4BE2-B8AC-051FA0F82280}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD2E4B90-280D-4BE2-B8AC-051FA0F82280}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD2E4B90-280D-4BE2-B8AC-051FA0F82280}.Release|Any CPU.Build.0 = Release|Any CPU
+		{671AB3AD-5122-4E5B-BA73-7B462FD89361}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{671AB3AD-5122-4E5B-BA73-7B462FD89361}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{671AB3AD-5122-4E5B-BA73-7B462FD89361}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{671AB3AD-5122-4E5B-BA73-7B462FD89361}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
