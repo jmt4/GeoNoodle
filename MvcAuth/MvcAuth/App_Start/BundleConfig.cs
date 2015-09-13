@@ -23,6 +23,10 @@ namespace MvcAuth
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
+            // Create new bundle for highcharts
+            bundles.Add(new ScriptBundle("~/bundles/highcharts")
+                            .Include("~/Scripts/Highcharts-4.0.1/js/highcharts.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
