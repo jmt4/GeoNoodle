@@ -1,6 +1,6 @@
 """
-Given the name of a state, return the areas
-in that state and their corresponding codes.
+Given the name of a state or abbreviation, return the areas
+in that state and their corresponding BLS codes.
 
 Source:
 http://www.bls.gov/cew/doc/titles/area/area_titles.htm
@@ -60,7 +60,7 @@ STATES_ABBREV = {
 'WYOMING': 'WY'
 }
 
-def get_area_codes_by_state(file, state):
+def get_state_area_codes(file, state):
     code_area = {}
     with open(file) as f:
         us_total = f.readline()
@@ -68,14 +68,16 @@ def get_area_codes_by_state(file, state):
         us_metro = f.readline()
         us_nonmetro = f.readline()
         for line in f.readlines():
+            code, county = '', ''
             if state in line or STATES_ABBREV[state.upper()] in line:
-                if len(line.split()) == 4:
-                    """
-                     Unpacking values of the following form
-                     '04007	Gila County, Arizona'
-                    """
-                    code, county_name, x, y = line.split()
-                    code_area[code] = "%s %s" % (county_name.replace(',', ''), "County",)
+                for idx, ele in enumerate(line.split()):
+                    if idx == 0:
+                        code = ele
+                    elif state in ele or STATES_ABBREV[state.upper()] in ele:
+                        break
+                    else:
+                        county += ele.replace(',', '') + ' '
+                    code_area[code] = county
     return code_area
 
 if __name__ == '__main__':

@@ -143,7 +143,7 @@ USNMS	U.S. Nonmetropolitan Area Counties (combined)
 04996	Overseas Locations -- Arizona
 04997	Multicounty, Not Statewide -- Arizona
 04998	Out-of-State, Arizona
-04999	Unknown Or Undefined, Arizona
+04999	Unknown-Or-Undefined, Arizona
 05000	Arkansas -- Statewide
 05001	Arkansas County, Arkansas
 05003	Ashley County, Arkansas

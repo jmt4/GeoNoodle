@@ -13,9 +13,16 @@
 # Submit questions at: http://data.bls.gov/cgi-bin/forms/cew?/cew/home.htm 
 #
 # *******************************************************************************
+# September 2015
+# Converted to python 3.x. Extended API to include some more finely-grained data
+# retrieval.
+#
+# ********************************************************************************
 
 
-import urllib2
+import urllib.request
+import statistics
+from bls_state_area_codes import get_state_area_codes
 
 
 # *******************************************************************************
@@ -44,7 +51,7 @@ def qcewGetAreaData(year,qtr,area):
     urlPath = urlPath.replace("[YEAR]",year)
     urlPath = urlPath.replace("[QTR]",qtr)
     urlPath = urlPath.replace("[AREA]",area)
-    httpStream = urllib2.urlopen(urlPath)
+    httpStream = urllib.request.urlopen(urlPath)
     csv = httpStream.read()
     httpStream.close()
     return qcewCreateDataRows(csv)
@@ -66,7 +73,7 @@ def qcewGetIndustryData(year,qtr,industry):
     urlPath = urlPath.replace("[YEAR]",year)
     urlPath = urlPath.replace("[QTR]",qtr)
     urlPath = urlPath.replace("[IND]",industry)
-    httpStream = urllib2.urlopen(urlPath)
+    httpStream = urllib.request.urlopen(urlPath)
     csv = httpStream.read()
     httpStream.close()
     return qcewCreateDataRows(csv)
@@ -87,35 +94,104 @@ def qcewGetSizeData(year,size):
     urlPath = "http://www.bls.gov/cew/data/api/[YEAR]/1/size/[SIZE].csv"
     urlPath = urlPath.replace("[YEAR]",year)
     urlPath = urlPath.replace("[SIZE]",size)
-    httpStream = urllib2.urlopen(urlPath)
+    httpStream = urllib.request.urlopen(urlPath)
     csv = httpStream.read()
     httpStream.close()
     return qcewCreateDataRows(csv)
 # *******************************************************************************
 
 
+# *******************************************************************************
+# qcewGetIndustryAreaData : This function takes a year, quarter, industry code,
+# and area code and returns a list of information from that quarter. Specifically,
+# industry data for each area (county, city) in a state is returned as a list of
+# a lists.
+# *******************************************************************************
+#
+def gcewGetIndustryAreaData(year, qtr, industry, state):
+    urlPath = "http://www.bls.gov/cew/data/api/[YEAR]/[QTR]/industry/[IND].csv"
+    urlPath = urlPath.replace("[YEAR]",year)
+    urlPath = urlPath.replace("[QTR]",qtr)
+    urlPath = urlPath.replace("[IND]",industry)
+    httpStream = urllib.request.urlopen(urlPath)
+    csv = httpStream.read()
+    httpStream.close()
+    state_area_codes = get_state_area_codes('code area.txt', state)
+    def get_area_by_code(dataLines, area):
+        for row in dataLines:
+            if area in row:
+                return row.split(b',')
+    data = []
+    lines = csv.split(b'\r\n')
+    for code in state_area_codes:
+        area = get_area_by_code(lines, code)
+        if area:
+            data.append(area)
+    return data
+# *******************************************************************************
 
+# *******************************************************************************
+# qcewGetAvgWageByAreaAndYear : This function returns the average weekly wage of
+# a specific area given that area, the year, and quarter. Specifically, we simply
+# sum up the avg weekly wage for each industry and divide by the number of
+# industries.
+# *******************************************************************************
+#
+def qcewGetAvgWageByAreaAndYear(year, qtr, area):
+    urlPath = "http://www.bls.gov/cew/data/api/[YEAR]/[QTR]/area/[AREA].csv"
+    urlPath = urlPath.replace("[YEAR]",year)
+    urlPath = urlPath.replace("[QTR]",qtr)
+    urlPath = urlPath.replace("[AREA]",area)
+    httpStream = urllib.request.urlopen(urlPath)
+    csv = httpStream.read()
+    httpStream.close()
+    lines = csv.split(b'\r\n')[1:]
+    running_total = 0;
+    for idx, line in enumerate(lines):
+        line = line.decode()
+        line = line.split(',')
+        try:
+            running_total += int(line[15])
+        except IndexError:
+            break
+    return running_total/(float(len(lines)))
+# *******************************************************************************
+
+# *******************************************************************************
+# qcewGetMedianWageByAreaAndYear : This function returns the area-wide median weekly
+# wage given a year, quarter, and area. Specifically, we create a list and append
+# industry weekly wages then use statistics package to calculate median.
+# *******************************************************************************
+#
+def qcewGetMedianWageByAreaAndYear(year, qtr, area):
+    urlPath = "http://www.bls.gov/cew/data/api/[YEAR]/[QTR]/area/[AREA].csv"
+    urlPath = urlPath.replace("[YEAR]",year)
+    urlPath = urlPath.replace("[QTR]",qtr)
+    urlPath = urlPath.replace("[AREA]",area)
+    httpStream = urllib.request.urlopen(urlPath)
+    csv = httpStream.read()
+    httpStream.close()
+    lines = csv.split(b'\r\n')[1:]
+    running_total = [];
+    for idx, line in enumerate(lines):
+        line = line.decode()
+        line = line.split(',')
+        try:
+            running_total.append(int(line[15]))
+        except IndexError:
+            break
+    return statistics.median(running_total)
+# *******************************************************************************
 
 Michigan_Data = qcewGetAreaData("2013","1","26000")
 Auto_Manufacturing = qcewGetIndustryData("2013","1","3361")
 SizeData = qcewGetSizeData("2013","6")
 
-Arizona_Data = qcewGetAreaData("2014","1", "04005")
-
-# prints the industry_code in row 5.
-# remember row zero contains field names
-print(Michigan_Data[5])
-# prints the area_fips in row 1.
-# remember row zero contains field names
-print(Auto_Manufacturing[1][0])
-
-
-# prints the own_code in row 1.
-# remember row zero contains field names
-print(SizeData[1][1])
-
-
-print(Arizona_Data[27][15])
+if __name__ == '__main__':
+    Arizona_Avg_Wage = qcewGetAvgWageByAreaAndYear("2012", "1", "04000")
+    Arizona_Median_Wage = qcewGetMedianWageByAreaAndYear("2012", "1", "04000")
+    print(Arizona_Avg_Wage)
+    print(Arizona_Median_Wage)
 
 
 
