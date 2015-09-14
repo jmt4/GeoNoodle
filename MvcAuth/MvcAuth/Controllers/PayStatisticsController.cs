@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -46,7 +47,7 @@ namespace MvcAuth.Controllers
             /* create Highchart type */
             var chart = new Highcharts("chart")
                 /* Define chart type -- specify pie, heat, etc here */
-                        .InitChart(new Chart { DefaultSeriesType = ChartTypes.Line })
+                        .InitChart(new Chart { DefaultSeriesType = ChartTypes.Area })
                 /* Main title of chart */
                         .SetTitle(new Title { Text = "Pay over time" })
                 /* Small title below main title */
@@ -62,6 +63,7 @@ namespace MvcAuth.Controllers
                         })
                         .SetPlotOptions(new PlotOptions
                         {
+                            /*
                             Line = new PlotOptionsLine
                             {
                                 DataLabels = new PlotOptionsLineDataLabels
@@ -69,6 +71,18 @@ namespace MvcAuth.Controllers
                                     Enabled = true
                                 },
                                 EnableMouseTracking = false
+                            },
+                            */
+
+                            Area = new PlotOptionsArea
+                            {
+                                FillColor = new BackColorOrGradient(new Gradient
+                                {
+                                    LinearGradient = new[] { 0, 0, 0, 300},
+                                    Stops = new object[,] { { 0, "rgb(116, 116, 116)" }, { 1, Color.Gold } }
+                                }),
+                                LineWidth = 1,
+                                LineColor = Color.BlanchedAlmond,
                             }
                         })
                 /* Load Y values */
