@@ -14,14 +14,23 @@ using DotNet.Highcharts.Enums;
 
 namespace MvcAuth.Controllers
 {
-    public class PayStatisticsController : Controller
+    public class StatisticsController : Controller
     {
         /* ASP.NET MVC uses the format below to determine what code to invoke */
         /* /[Controller]/[ActionName]/[Parameters] */
         /* https://localhost:44300/PayStatistics/Index */
         /* https://localhost:44300/PayStatistics/Welcome */
         // GET: PayStatistics
+
         public ActionResult Index()
+        {
+            List<string> jobs = new List<string> { "Computer Science", "Chemistry", "Construction"};
+            ViewBag.JobList = jobs;
+
+            return View();
+        }
+
+        public ActionResult PayStats()
         {
             
 
