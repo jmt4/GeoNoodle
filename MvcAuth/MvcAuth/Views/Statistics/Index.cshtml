@@ -1,0 +1,19 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2><p>Select an industrty</p></h2>
+
+
+    <p>Select a job industry below to see current statistics</p>
+   <div class="btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Select <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        @foreach (var job in ViewBag.JobList)
+        {
+            <li>@Html.ActionLink((string)@job, "PayStats", "Statistics")</li>
+        }
+    </ul>
+</div>    
