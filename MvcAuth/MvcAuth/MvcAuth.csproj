@@ -277,8 +277,9 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\PayStatistics\Index.cshtml" />
+    <Content Include="Views\PayStatistics\PayStats.cshtml" />
     <Content Include="Views\PayStatistics\Welcome.cshtml" />
+    <Content Include="Views\PayStatistics\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
