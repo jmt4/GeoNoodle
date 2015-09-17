@@ -280,6 +280,7 @@
     <Content Include="Views\Statistics\Index.cshtml" />
     <Content Include="Views\Statistics\PayStats.cshtml" />
     <Content Include="Views\Statistics\Welcome.cshtml" />
+    <Content Include="Views\Statistics\CompareSalaries.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

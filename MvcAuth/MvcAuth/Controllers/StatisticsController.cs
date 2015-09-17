@@ -105,6 +105,57 @@ namespace MvcAuth.Controllers
             return View(chart);
         }
 
+        public ActionResult CompareSalaries()
+        {
+          Highcharts chart = new Highcharts("chart")
+              .InitChart(new Chart { DefaultSeriesType = ChartTypes.Bar })
+              .SetTitle(new Title { Text = "Historic World Population by Region" })
+              //.SetSubtitle(new Subtitle { Text = "Source: Wikipedia.org" })
+              .SetXAxis(new XAxis
+              {
+                Categories = new[] { "Bottom 10%", "Medium", "Top 10%" },
+                Title = new XAxisTitle { Text = string.Empty }
+              })
+              .SetYAxis(new YAxis
+              {
+                Min = 0,
+                Title = new YAxisTitle
+                {
+                  Text = "Salary",
+                  Align = AxisTitleAligns.High
+                }
+              })
+              .SetTooltip(new Tooltip { Formatter = "function() { return ''+ this.series.name +': '+ this.y ; }" })
+              .SetPlotOptions(new PlotOptions
+              {
+                Bar = new PlotOptionsBar
+                {
+                  DataLabels = new PlotOptionsBarDataLabels { Enabled = true }
+                }
+              })
+              .SetLegend(new Legend
+              {
+                Layout = Layouts.Vertical,
+                Align = HorizontalAligns.Right,
+                VerticalAlign = VerticalAligns.Top,
+                X = -100,
+                Y = 100,
+                Floating = true,
+                BorderWidth = 1,
+                BackgroundColor = new BackColorOrGradient(ColorTranslator.FromHtml("#FFFFFF")),
+                Shadow = true
+              })
+              .SetCredits(new Credits { Enabled = false })
+              .SetSeries(new[]
+                {
+                    new Series { Name = "Physician", Data = new Data(new object[] { 80000, 125000, 215000,  }) },
+                    new Series { Name = "Software Engineer", Data = new Data(new object[] { 39000, 89000, 123000 }) },
+                    new Series { Name = "Botanist", Data = new Data(new object[] { 33000, 56000, 79000 }) }
+                });
+
+          return View(chart);
+        }
+
         public ActionResult Welcome(string name, int numTimes = 1)
         {
             ViewBag.Message = "Hello " + name;
