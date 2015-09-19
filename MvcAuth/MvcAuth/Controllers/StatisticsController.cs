@@ -13,6 +13,7 @@ using DotNet.Highcharts.Enums;
 
 
 
+
 namespace MvcAuth.Controllers
 {
     public class StatisticsController : Controller
