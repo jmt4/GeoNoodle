@@ -1,33 +1,18 @@
-﻿
-@{
-    ViewBag.Title = "Location";
-}
-
-<h2>Location</h2>
-<style type='text/css'>
-  container {
-    height: 500px;
-    min-width: 310px;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-
-  .loading {
-    margin-top: 10em;
-    text-align: center;
-    color: gray;
-  }
-</style>
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Arizona - Highmaps - jsFiddle demo</title>
 
 
-<div id="container" style="min-width: 310px; max-width: 400px"></div>
+  <script type='text/javascript' src='//code.jquery.com/jquery-1.11.0.js'></script>
 
+  <script type='text/javascript'>
+//<![CDATA[
 
-
-  <script type="text/javascript">
-    $(document).ready(function ()
+    $(function ()
     {
-      var chart;
+
       // Prepare demo data
       var data = [
           {
@@ -93,7 +78,7 @@
       ];
 
       // Initiate the chart
-      chart = new Highcharts.Map({
+      var chart = new Highcharts.Map({
 
         chart: {
           renderTo: 'container'
@@ -133,7 +118,20 @@
         }]
       });
     });
+
+    //]]>
+
   </script>
 
+</head>
+<body>
+  <script src="Scripts/js/highmaps.js"></script>
+  <script src="Scripts/us-az-all.js"></script>
+  <script src="Scripts/js/modules/exporting.js"></script>
+
+  <div id="container" style="min-width: 310px; max-width: 400px"></div>
 
 
+</body>
+
+</html>
