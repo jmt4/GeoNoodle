@@ -237,6 +237,38 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\js\adapters\standalone-framework.js" />
+    <Content Include="Scripts\js\adapters\standalone-framework.src.js" />
+    <Content Include="Scripts\js\highcharts.js" />
+    <Content Include="Scripts\js\highcharts.src.js" />
+    <Content Include="Scripts\js\highmaps.js" />
+    <Content Include="Scripts\js\highmaps.src.js" />
+    <Content Include="Scripts\js\modules\boost.js" />
+    <Content Include="Scripts\js\modules\boost.src.js" />
+    <Content Include="Scripts\js\modules\canvas-tools.js" />
+    <Content Include="Scripts\js\modules\canvas-tools.src.js" />
+    <Content Include="Scripts\js\modules\data.js" />
+    <Content Include="Scripts\js\modules\data.src.js" />
+    <Content Include="Scripts\js\modules\drilldown.js" />
+    <Content Include="Scripts\js\modules\drilldown.src.js" />
+    <Content Include="Scripts\js\modules\exporting.js" />
+    <Content Include="Scripts\js\modules\exporting.src.js" />
+    <Content Include="Scripts\js\modules\heatmap.js" />
+    <Content Include="Scripts\js\modules\heatmap.src.js" />
+    <Content Include="Scripts\js\modules\map.js" />
+    <Content Include="Scripts\js\modules\map.src.js" />
+    <Content Include="Scripts\js\modules\offline-exporting.js" />
+    <Content Include="Scripts\js\modules\offline-exporting.src.js" />
+    <Content Include="Scripts\js\modules\treemap.js" />
+    <Content Include="Scripts\js\modules\treemap.src.js" />
+    <Content Include="Scripts\js\themes\dark-blue.js" />
+    <Content Include="Scripts\js\themes\dark-green.js" />
+    <Content Include="Scripts\js\themes\dark-unica.js" />
+    <Content Include="Scripts\js\themes\gray.js" />
+    <Content Include="Scripts\js\themes\grid-light.js" />
+    <Content Include="Scripts\js\themes\grid.js" />
+    <Content Include="Scripts\js\themes\sand-signika.js" />
+    <Content Include="Scripts\js\themes\skies.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
@@ -281,6 +313,7 @@
     <Content Include="Views\Statistics\PayStats.cshtml" />
     <Content Include="Views\Statistics\Welcome.cshtml" />
     <Content Include="Views\Statistics\CompareSalaries.cshtml" />
+    <Content Include="Views\Statistics\Location.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
