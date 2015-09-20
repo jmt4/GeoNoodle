@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -24,6 +25,9 @@ namespace MvcAuth.Controllers
 
         public ActionResult Index()
         {
+
+            List<String> statsPages = new List<string> { "Trending Jobs", "Location", "PayStatistics" };
+            ViewBag.statsPage = statsPages; 
             List<string> jobs = new List<string> { "Computer Science", "Chemistry", "Construction"};
             ViewBag.JobList = jobs;
 
@@ -105,6 +109,81 @@ namespace MvcAuth.Controllers
             return View(chart);
         }
 
+        public ActionResult TrendingJobs() {
+
+            Hashtable trendingJobs = new Hashtable();
+            trendingJobs[20] = "softwareEngineering";
+            trendingJobs[32] = "mining";
+            trendingJobs[54] = "gaming";
+            trendingJobs[75] = "nursing";
+            trendingJobs[30] = "physician Assistant";
+            trendingJobs[88] = "dentist";
+            trendingJobs[72] = "musician";
+            trendingJobs[71] = "policeman";
+            trendingJobs[94] = "anchor";
+            trendingJobs[15] = "university lecturer";
+
+            String[] YrateOfGrowth = new String[10];
+            trendingJobs.Keys.CopyTo(YrateOfGrowth, 0);
+            String[] Xjobs = new String[10];
+            trendingJobs.Values.CopyTo(Xjobs, 0);
+
+
+            /* create Highchart type */
+            var chart = new Highcharts("chart")
+                /* Define chart type -- specify pie, heat, etc here */
+                        .InitChart(new Chart { DefaultSeriesType = ChartTypes.Column})
+                /* Main title of chart */
+                        .SetTitle(new Title { Text = "Trending Jobs" })
+                /* Small title below main title */
+                        .SetSubtitle(new Subtitle { Text = "Statistics" })
+                /* Load x values */
+                        .SetXAxis(new XAxis { Categories = Xjobs })
+                /* Title of Y axis */
+                        .SetYAxis(new YAxis { Title = new YAxisTitle { Text = "RateOfGrowth (%)" } })
+                        .SetTooltip(new Tooltip
+                        {
+                            Enabled = true,
+                            Formatter = @"function() { return '<b>'+ this.series.name + '</b><br/>'+ this.x +': '+ this.y; }"
+                        })
+                        .SetPlotOptions(new PlotOptions
+                        {
+                            /*
+                            Line = new PlotOptionsLine
+                            {
+                                DataLabels = new PlotOptionsLineDataLabels
+                                {
+                                    Enabled = true
+                                },
+                                EnableMouseTracking = false
+                            },
+                            */
+
+                            Area = new PlotOptionsArea
+                            {
+                                FillColor = new BackColorOrGradient(new Gradient
+                                {
+                                    LinearGradient = new[] { 0, 0, 0, 300 },
+                                    Stops = new object[,] { { 0, "rgb(116, 116, 116)" }, { 1, Color.Gold } }
+                                }),
+                                LineWidth = 1,
+                                LineColor = Color.BlanchedAlmond,
+                            }
+                        })
+                /* Load Y values */
+                        .SetSeries(new[] 
+                        {
+                            new Series { Name = "Jobs", Data = new Data(YrateOfGrowth) },
+                            /* add more y data to create a second line */
+                            /* new Series { Name = "Other Name", Data = new Data(OtherData) } */
+                        });
+
+            return View(chart);
+
+        }
+        
+
+        
         public ActionResult CompareSalaries()
         {
           Highcharts chart = new Highcharts("chart")
