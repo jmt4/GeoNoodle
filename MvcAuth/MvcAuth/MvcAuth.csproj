@@ -281,6 +281,7 @@
     <Content Include="Views\Statistics\PayStats.cshtml" />
     <Content Include="Views\Statistics\Welcome.cshtml" />
     <Content Include="Views\Statistics\CompareSalaries.cshtml" />
+    <Content Include="Views\Statistics\TrendingJobs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
