@@ -335,6 +335,7 @@
     <Content Include="Views\Statistics\PayStats.cshtml" />
     <Content Include="Views\Statistics\_PartialForm.cshtml" />
     <Content Include="Views\Statistics\CompareSalaries.cshtml" />
+    <Content Include="Views\Statistics\Location.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
