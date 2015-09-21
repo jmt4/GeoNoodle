@@ -12,6 +12,8 @@ using DotNet.Highcharts.Attributes;
 using DotNet.Highcharts.Enums;
 
 
+
+
 namespace MvcAuth.Controllers
 {
     public class StatisticsController : Controller
@@ -154,6 +156,12 @@ namespace MvcAuth.Controllers
                 });
 
           return View(chart);
+        }
+
+        public ActionResult Location()
+        {
+       
+          return View();
         }
 
         public ActionResult Welcome(string name, int numTimes = 1)
