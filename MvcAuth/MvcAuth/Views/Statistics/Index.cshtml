@@ -2,27 +2,18 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Select an industrty</h2>
+<h2>Arizona Statistics</h2>
 
 
-    <p>Select a job industry below to see current statistics</p>
+    <p>Select Statistics Category</p>
    <div class="btn-group">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Select <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-
-       @if(ViewBag.statsPage == "TrendingJobs")
+        @foreach (var job in ViewBag.statsPage)
         {
-            <li>@Html.ActionLink("TrendingJobs", "Statistics")</li>
-        } 
-        @if (ViewBag.statsPage == "Location")
-        {
-            <li>@Html.ActionLink("Location", "Statistics")</li>
-        } 
-        @if (ViewBag.statsPage == "PayStatistics")
-        {
-            <li>@Html.ActionLink("PayStats", "Statistics")</li>
-        } 
+            <li>@Html.ActionLink((string)@job,(String)@job, "Statistics")</li>
+        }
     </ul>
 </div>    

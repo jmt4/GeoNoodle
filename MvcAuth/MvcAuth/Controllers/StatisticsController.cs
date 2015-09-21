@@ -26,6 +26,8 @@ namespace MvcAuth.Controllers
 
         public ActionResult Index()
         {
+            List<String> statsPages = new List<String> { "TrendingJobs", "PayStats", "Location" };
+            ViewBag.statsPage = statsPages;
             List<string> jobs = new List<string> { "Computer Science", "Chemistry", "Construction"};
             ViewBag.JobList = jobs;
 
