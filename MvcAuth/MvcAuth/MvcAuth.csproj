@@ -166,12 +166,28 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\PayStatisticsController.cs" />
+    <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509192250280_InitialCreate.cs" />
+    <Compile Include="Migrations\201509192250280_InitialCreate.Designer.cs">
+      <DependentUpon>201509192250280_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509200225074_DensityJobCountICollection.cs" />
+    <Compile Include="Migrations\201509200225074_DensityJobCountICollection.Designer.cs">
+      <DependentUpon>201509200225074_DensityJobCountICollection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509200526014_AddedEnumTypes.cs" />
+    <Compile Include="Migrations\201509200526014_AddedEnumTypes.Designer.cs">
+      <DependentUpon>201509200526014_AddedEnumTypes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Density.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\JobCount.cs" />
+    <Compile Include="Models\StatisticsViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Wages.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -194,6 +210,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
+    <Content Include="MapDemo.html" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\Highcharts-4.0.1\js\adapters\standalone-framework.js" />
@@ -237,11 +254,44 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\js\adapters\standalone-framework.js" />
+    <Content Include="Scripts\js\adapters\standalone-framework.src.js" />
+    <Content Include="Scripts\js\highcharts.js" />
+    <Content Include="Scripts\js\highcharts.src.js" />
+    <Content Include="Scripts\js\highmaps.js" />
+    <Content Include="Scripts\js\highmaps.src.js" />
+    <Content Include="Scripts\js\modules\boost.js" />
+    <Content Include="Scripts\js\modules\boost.src.js" />
+    <Content Include="Scripts\js\modules\canvas-tools.js" />
+    <Content Include="Scripts\js\modules\canvas-tools.src.js" />
+    <Content Include="Scripts\js\modules\data.js" />
+    <Content Include="Scripts\js\modules\data.src.js" />
+    <Content Include="Scripts\js\modules\drilldown.js" />
+    <Content Include="Scripts\js\modules\drilldown.src.js" />
+    <Content Include="Scripts\js\modules\exporting.js" />
+    <Content Include="Scripts\js\modules\exporting.src.js" />
+    <Content Include="Scripts\js\modules\heatmap.js" />
+    <Content Include="Scripts\js\modules\heatmap.src.js" />
+    <Content Include="Scripts\js\modules\map.js" />
+    <Content Include="Scripts\js\modules\map.src.js" />
+    <Content Include="Scripts\js\modules\offline-exporting.js" />
+    <Content Include="Scripts\js\modules\offline-exporting.src.js" />
+    <Content Include="Scripts\js\modules\treemap.js" />
+    <Content Include="Scripts\js\modules\treemap.src.js" />
+    <Content Include="Scripts\js\themes\dark-blue.js" />
+    <Content Include="Scripts\js\themes\dark-green.js" />
+    <Content Include="Scripts\js\themes\dark-unica.js" />
+    <Content Include="Scripts\js\themes\gray.js" />
+    <Content Include="Scripts\js\themes\grid-light.js" />
+    <Content Include="Scripts\js\themes\grid.js" />
+    <Content Include="Scripts\js\themes\sand-signika.js" />
+    <Content Include="Scripts\js\themes\skies.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\us-az-all.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -277,8 +327,14 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\PayStatistics\Index.cshtml" />
-    <Content Include="Views\PayStatistics\Welcome.cshtml" />
+    <Content Include="Views\Statistics\Create.cshtml" />
+    <Content Include="Views\Statistics\Delete.cshtml" />
+    <Content Include="Views\Statistics\Details.cshtml" />
+    <Content Include="Views\Statistics\Edit.cshtml" />
+    <Content Include="Views\Statistics\Index.cshtml" />
+    <Content Include="Views\Statistics\PayStats.cshtml" />
+    <Content Include="Views\Statistics\_PartialForm.cshtml" />
+    <Content Include="Views\Statistics\CompareSalaries.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -286,6 +342,17 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201509192250280_InitialCreate.resx">
+      <DependentUpon>201509192250280_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509200225074_DensityJobCountICollection.resx">
+      <DependentUpon>201509200225074_DensityJobCountICollection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509200526014_AddedEnumTypes.resx">
+      <DependentUpon>201509200526014_AddedEnumTypes.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

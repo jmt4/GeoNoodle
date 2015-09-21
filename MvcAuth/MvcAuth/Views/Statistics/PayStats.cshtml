@@ -1,0 +1,30 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewBag.Title = "Statistics";
+}
+
+<h2>
+    Pay Over Time
+    <!-- Single button -->
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Other Statistics <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a href="#">Trending Jobs</a></li>
+            <li><a href="#">Job Density</a></li>
+        </ul>
+    </div>    
+</h2>
+
+@model DotNet.Highcharts.Highcharts
+
+<p>A chart for statistics</p>
+@Model
+
+<div>
+    @Html.Partial("_PartialForm", new MvcAuth.Models.Job())
+</div>

@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Arizona - Highmaps - jsFiddle demo</title>
+
+
+  <script type='text/javascript' src='//code.jquery.com/jquery-1.11.0.js'></script>
+
+  <script type='text/javascript'>
+//<![CDATA[
+
+    $(function ()
+    {
+
+      // Prepare demo data
+      var data = [
+          {
+            "hc-key": "us-az-011",
+            "value": 0
+          },
+          {
+            "hc-key": "us-az-001",
+            "value": 1
+          },
+          {
+            "hc-key": "us-az-003",
+            "value": 2
+          },
+          {
+            "hc-key": "us-az-012",
+            "value": 3
+          },
+          {
+            "hc-key": "us-az-013",
+            "value": 4
+          },
+          {
+            "hc-key": "us-az-005",
+            "value": 5
+          },
+          {
+            "hc-key": "us-az-007",
+            "value": 6
+          },
+          {
+            "hc-key": "us-az-021",
+            "value": 7
+          },
+          {
+            "hc-key": "us-az-009",
+            "value": 8
+          },
+          {
+            "hc-key": "us-az-015",
+            "value": 9
+          },
+          {
+            "hc-key": "us-az-017",
+            "value": 10
+          },
+          {
+            "hc-key": "us-az-027",
+            "value": 11
+          },
+          {
+            "hc-key": "us-az-023",
+            "value": 12
+          },
+          {
+            "hc-key": "us-az-025",
+            "value": 13
+          },
+          {
+            "hc-key": "us-az-019",
+            "value": 14
+          }
+      ];
+
+      // Initiate the chart
+      var chart = new Highcharts.Map({
+
+        chart: {
+          renderTo: 'container'
+        },
+
+
+        title: {
+          text: 'Highmaps basic demo'
+        },
+
+
+        mapNavigation: {
+          enabled: true,
+          buttonOptions: {
+            verticalAlign: 'bottom'
+          }
+        },
+
+        colorAxis: {
+          min: 0
+        },
+
+        series: [{
+          data: data,
+          mapData: Highcharts.maps['countries/us/us-az-all'],
+          joinBy: 'hc-key',
+          name: 'Random data',
+          states: {
+            hover: {
+              color: '#BADA66'
+            }
+          },
+          dataLabels: {
+            enabled: true,
+            format: '{point.name}'
+          }
+        }]
+      });
+    });
+
+    //]]>
+
+  </script>
+
+</head>
+<body>
+  <script src="Scripts/js/highmaps.js"></script>
+  <script src="Scripts/us-az-all.js"></script>
+  <script src="Scripts/js/modules/exporting.js"></script>
+
+  <div id="container" style="min-width: 310px; max-width: 400px"></div>
+
+
+</body>
+
+</html>

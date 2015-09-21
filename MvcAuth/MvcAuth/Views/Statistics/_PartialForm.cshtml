@@ -1,0 +1,13 @@
+﻿@model MvcAuth.Models.Job
+<div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <p>Category</p>
+        @*@Html.EnumDropDownListFor(m => m.Category)<button type="submit" id="category">Submit</button>*@
+        @Html.DropDownList("categoryName", new SelectList(Enum.GetValues(typeof(MvcAuth.Models.Category))));<button type="submit" name="category">Submit</button>
+        <p>Select a job below</p>
+        @Html.DropDownList("jobName", new SelectList(ViewBag.JobList));<button type="submit" name="job">Submit</button>
+        @*@Html.DropDownListFor(m => m.Name, new SelectList(ViewBag.JobList))<button type="submit" id="job">Submit</button>*@
+    }
+    </div>
