@@ -12,9 +12,17 @@
     </button>
     <ul class="dropdown-menu">
 
-       @foreach (var job in ViewBag.JobList)
+       @if(ViewBag.statsPage == "TrendingJobs")
         {
-            <li>@Html.ActionLink((string)@job, "PayStats", "Statistics")</li>
+            <li>@Html.ActionLink("TrendingJobs", "Statistics")</li>
+        } 
+        @if (ViewBag.statsPage == "Location")
+        {
+            <li>@Html.ActionLink("Location", "Statistics")</li>
+        } 
+        @if (ViewBag.statsPage == "PayStatistics")
+        {
+            <li>@Html.ActionLink("PayStats", "Statistics")</li>
         } 
     </ul>
 </div>    
