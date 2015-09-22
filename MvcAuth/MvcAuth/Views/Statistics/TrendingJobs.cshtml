@@ -12,8 +12,10 @@
             Other Statistics <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-            <li><a href="#">Pay Statstics</a></li>
-            <li><a href="#">Job Density</a></li>
+            @foreach (var job in ViewBag.statsPage)
+            {
+                <li>@Html.ActionLink((string)@job, (String)@job, "Statistics")</li>
+            }
         </ul>
     </div> 
 @model DotNet.Highcharts.Highcharts

@@ -37,7 +37,8 @@ namespace MvcAuth.Controllers
 
         public ActionResult PayStats()
         {
-            
+            List<String> statsPages = new List<String> { "TrendingJobs", "PayStats", "Location" };
+            ViewBag.statsPage = statsPages;
 
             var wages = new List<Wages> {
                 new Wages(){    date = new DateTime(2013, 1, 10), wage = 400},
@@ -162,6 +163,8 @@ namespace MvcAuth.Controllers
         }
         public ActionResult TrendingJobs()
         {
+            List<String> statsPages = new List<String> { "TrendingJobs", "PayStats", "Location" };
+            ViewBag.statsPage = statsPages;
             Random rand = new Random();
             var trendinJobs = new List<trendingJobs>
             {
@@ -236,7 +239,8 @@ namespace MvcAuth.Controllers
         }
         public ActionResult Location()
         {
-       
+          List<String> statsPages = new List<String> { "TrendingJobs", "PayStats", "Location" };
+          ViewBag.statsPage = statsPages;
           return View();
         }
 
