@@ -162,31 +162,26 @@ namespace MvcAuth.Controllers
         }
         public ActionResult TrendingJobs()
         {
-
-            Hashtable trendingJobs = new Hashtable();
-            trendingJobs[20] = "softwareEngineering";
-            trendingJobs[32] = "mining";
-            trendingJobs[54] = "gaming";
-            trendingJobs[75] = "nursing";
-            trendingJobs[30] = "physician Assistant";
-            trendingJobs[88] = "dentist";
-            trendingJobs[72] = "musician";
-            trendingJobs[71] = "policeman";
-            trendingJobs[94] = "anchor";
-            trendingJobs[15] = "university lecturer";
-
-            String[] YrateOfGrowth = new String[10];
-            String[] Xjobs = new String[10];
-            int i = 0;
-            foreach (DictionaryEntry item in trendingJobs)
+            Random rand = new Random();
+            var trendinJobs = new List<trendingJobs>
             {
-                  YrateOfGrowth[i]= item.Key.ToString() ;
-                  Xjobs[i]= item.Value.ToString();
-                  i++;
-            }
-            
+                
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "software Engineer"},
+                new trendingJobs(){ rateofGrowth = 40, Jobs = "mining"},
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "gaming"},
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "nursing"},
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "physician Assistant"},
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "dentist"},
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "musician"},
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "policeman"},
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "anchor"},
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "university lecturer"},
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "Mage"},
+            };
 
-
+            var yRateOfGrowth = trendinJobs.Select(i => new Object[] {i.rateofGrowth}).ToArray();
+            var xJobs = trendinJobs.Select(i => i.Jobs.ToString()).ToArray();
+  
             /* create Highchart type */
             var chart = new Highcharts("chart")
                 /* Define chart type -- specify pie, heat, etc here */
@@ -196,7 +191,7 @@ namespace MvcAuth.Controllers
                 /* Small title below main title */
                         .SetSubtitle(new Subtitle { Text = "Statistics" })
                 /* Load x values */
-                        .SetXAxis(new XAxis { Categories = Xjobs })
+                        .SetXAxis(new XAxis { Categories = xJobs })
                 /* Title of Y axis */
                         .SetYAxis(new YAxis { Title = new YAxisTitle { Text = "RateOfGrowth (%)" } })
                         .SetTooltip(new Tooltip
@@ -231,7 +226,7 @@ namespace MvcAuth.Controllers
                 /* Load Y values */
                         .SetSeries(new[] 
                         {
-                            new Series { Name = "Jobs", Data = new Data(YrateOfGrowth) },
+                            new Series { Name = "Jobs", Data = new Data(yRateOfGrowth) },
                             /* add more y data to create a second line */
                             /* new Series { Name = "Other Name", Data = new Data(OtherData) } */
                         });
