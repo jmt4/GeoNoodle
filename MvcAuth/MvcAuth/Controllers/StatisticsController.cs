@@ -224,7 +224,6 @@ namespace MvcAuth.Controllers
                 new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "musician"},
                 new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "policeman"},
                 new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "anchor"},
-                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "university lecturer"},
                 new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "Mage"},
             };
 
