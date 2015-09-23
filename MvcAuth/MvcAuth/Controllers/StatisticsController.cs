@@ -19,22 +19,25 @@ namespace MvcAuth.Controllers
     public class StatisticsController : Controller
     {
         private StatisticsDBContext db = new StatisticsDBContext();
-        
+
         [HttpGet]
         public ActionResult PayStats(string jobName, string categoryName)
         {
+            List<String> statsPages = new List<String> { "TrendingJobs", "PayStats", "Location" };
+            ViewBag.statsPage = statsPages;
             /* We use this list to create the jobs dropdown list */
             ViewBag.JobList = db.Jobs.Select(j => j.Name).ToList();
 
             Job job;
             var series = new List<Series>();
-            if (string.IsNullOrEmpty(jobName) && string.IsNullOrEmpty(categoryName)) 
+            if (string.IsNullOrEmpty(jobName) && string.IsNullOrEmpty(categoryName))
             {
                 /* Render default graph ie the first job in database */
                 job = db.Jobs.First();
-                series.Add(new Series { 
-                    Name = job.Name, 
-                    Data = new Data(new object[] { job.Bottom10Pay, job.MedianPay, job.Top10Pay,  }) 
+                series.Add(new Series
+                {
+                    Name = job.Name,
+                    Data = new Data(new object[] { job.Bottom10Pay, job.MedianPay, job.Top10Pay, })
                 });
             }
             else if (!string.IsNullOrEmpty(jobName))
@@ -66,17 +69,17 @@ namespace MvcAuth.Controllers
             {
                 try
                 {
-                    Category ourCategory = (Category) Enum.Parse(typeof(Category), categoryName);
+                    Category ourCategory = (Category)Enum.Parse(typeof(Category), categoryName);
                     foreach (Job j in db.Jobs)
                     {
-                       if (j.Category == ourCategory) 
-                       {
-                           series.Add(new Series
-                           {
-                               Name = j.Name,
-                               Data = new Data(new object[] { j.Bottom10Pay, j.MedianPay, j.Top10Pay, })
-                           });
-                       }
+                        if (j.Category == ourCategory)
+                        {
+                            series.Add(new Series
+                            {
+                                Name = j.Name,
+                                Data = new Data(new object[] { j.Bottom10Pay, j.MedianPay, j.Top10Pay, })
+                            });
+                        }
                     }
                 }
                 catch (System.ArgumentNullException)
@@ -131,7 +134,7 @@ namespace MvcAuth.Controllers
               })
               .SetCredits(new Credits { Enabled = false })
               .SetSeries(series.ToArray());
-          return View(chart);
+            return View(chart);
         }
 
         [HttpPost]
@@ -150,7 +153,6 @@ namespace MvcAuth.Controllers
                 return RedirectToAction("PayStats", new { jobName = jobName });
             }
         }
-
 
         public ActionResult CompareSalaries()
         {
@@ -203,12 +205,108 @@ namespace MvcAuth.Controllers
             return View(chart);
         }
 
+        [HttpGet]
+        public ActionResult TrendingJobs()
+        {
+            List<String> statsPages = new List<String> { "TrendingJobs", "PayStats", "Location" };
+            ViewBag.statsPage = statsPages;
+            ViewBag.JobList = db.Jobs.Select(j => j.Name).ToList();
+            Random rand = new Random();
+            var trendinJobs = new List<trendingJobs>
+            {
+                
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "software Engineer"},
+                new trendingJobs(){ rateofGrowth = 40, Jobs = "mining"},
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "gaming"},
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "nursing"},
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "physician Assistant"},
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "dentist"},
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "musician"},
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "policeman"},
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "anchor"},
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "university lecturer"},
+                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "Mage"},
+            };
+
+            var yRateOfGrowth = trendinJobs.Select(i => new Object[] { i.rateofGrowth }).ToArray();
+            var xJobs = trendinJobs.Select(i => i.Jobs.ToString()).ToArray();
+
+            /* create Highchart type */
+            var chart = new Highcharts("chart")
+                /* Define chart type -- specify pie, heat, etc here */
+                        .InitChart(new Chart { DefaultSeriesType = ChartTypes.Column })
+                /* Main title of chart */
+                        .SetTitle(new Title { Text = "Trending Jobs" })
+                /* Small title below main title */
+                        .SetSubtitle(new Subtitle { Text = "Statistics" })
+                /* Load x values */
+                        .SetXAxis(new XAxis { Categories = xJobs })
+                /* Title of Y axis */
+                        .SetYAxis(new YAxis { Title = new YAxisTitle { Text = "RateOfGrowth (%)" } })
+                        .SetTooltip(new Tooltip
+                        {
+                            Enabled = true,
+                            Formatter = @"function() { return '<b>'+ this.series.name + '</b><br/>'+ this.x +': '+ this.y; }"
+                        })
+                        .SetPlotOptions(new PlotOptions
+                        {
+                            /*
+                            Line = new PlotOptionsLine
+                            {
+                                DataLabels = new PlotOptionsLineDataLabels
+                                {
+                                    Enabled = true
+                                },
+                                EnableMouseTracking = false
+                            },
+                            */
+
+                            Area = new PlotOptionsArea
+                            {
+                                FillColor = new BackColorOrGradient(new Gradient
+                                {
+                                    LinearGradient = new[] { 0, 0, 0, 300 },
+                                    Stops = new object[,] { { 0, "rgb(116, 116, 116)" }, { 1, Color.Gold } }
+                                }),
+                                LineWidth = 1,
+                                LineColor = Color.BlanchedAlmond,
+                            }
+                        })
+                /* Load Y values */
+                        .SetSeries(new[] 
+                        {
+                            new Series { Name = "Jobs", Data = new Data(yRateOfGrowth) },
+                            /* add more y data to create a second line */
+                            /* new Series { Name = "Other Name", Data = new Data(OtherData) } */
+                        });
+
+            return View(chart);
+
+        }
+
+        [HttpPost]
+        [ActionName("TrendingJobs")]
+        [ValidateAntiForgeryToken]
+        public ActionResult TrendingJobsPost(string jobName, string categoryName) 
+        {
+            return RedirectToAction("TrendingJobs");
+        }
+
         public ActionResult Location()
         {
-
+            List<String> statsPages = new List<String> { "TrendingJobs", "PayStats", "Location" };
+            ViewBag.statsPage = statsPages;
+            ViewBag.JobList = db.Jobs.Select(j => j.Name).ToList();
             return View();
         }
-        
+
+        [HttpPost]
+        [ActionName("Location")]
+        [ValidateAntiForgeryToken]
+        public ActionResult LocationPost(string jobName, string categoryName)
+        {
+            return RedirectToAction("Location");
+        }
 
 
         /******************************************************************************/

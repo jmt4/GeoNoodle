@@ -1,0 +1,28 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Scripts.Render("~/bundles/highcharts")
+@{
+    ViewBag.Title = "TrendingJobs";
+}
+
+<h2>TrendingJobs</h2>
+    <!-- Single button -->
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Other Statistics <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            @foreach (var job in ViewBag.statsPage)
+            {
+                <li>@Html.ActionLink((string)@job, (String)@job, "Statistics")</li>
+            }
+        </ul>
+    </div> 
+@model DotNet.Highcharts.Highcharts
+
+@Model
+  
+<div>
+    @Html.Partial("_PartialForm", new MvcAuth.Models.Job())
+</div>
