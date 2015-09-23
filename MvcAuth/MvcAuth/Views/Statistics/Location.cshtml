@@ -21,6 +21,21 @@
   }
 </style>
 
+<div class="btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Other Statistics <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        @foreach (var job in ViewBag.statsPage)
+        {
+            <li>@Html.ActionLink((string)@job, (String)@job, "Statistics")</li>
+        }
+    </ul>
+</div>
+
+
+ 
+
 
 <div id="container" style="min-width: 310px; max-width: 400px"></div>
 
@@ -137,5 +152,8 @@
     });
   </script>
 
+<div>
+    @Html.Partial("_PartialForm", new MvcAuth.Models.Job())
+</div>
 
 
