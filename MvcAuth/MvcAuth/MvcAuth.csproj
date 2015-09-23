@@ -189,6 +189,7 @@
     <Compile Include="Models\JobCount.cs" />
     <Compile Include="Models\StatisticsViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\TrendingJobsController.cs" />
     <Compile Include="Models\Wages.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -336,6 +337,7 @@
     <Content Include="Views\Statistics\_PartialForm.cshtml" />
     <Content Include="Views\Statistics\CompareSalaries.cshtml" />
     <Content Include="Views\Statistics\Location.cshtml" />
+    <Content Include="Views\Statistics\TrendingJobs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
