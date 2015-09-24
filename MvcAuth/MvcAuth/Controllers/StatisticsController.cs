@@ -350,13 +350,28 @@ namespace MvcAuth.Controllers
                 return RedirectToAction("TrendingJobs", new { jobName = jobName });
             }
         }
-        
 
-        public ActionResult Location()
+
+        public ActionResult Location(string jobName, string categoryName)
         {
             List<String> statsPages = new List<String> { "TrendingJobs", "PayStats", "Location" };
             ViewBag.statsPage = statsPages;
             ViewBag.JobList = db.Jobs.Select(j => j.Name).ToList();
+
+            /*
+            if (string.IsNullOrEmpty(jobName) && string.IsNullOrEmpty(categoryName))
+            {
+                ViewBag.job = 
+            }
+            else if (!string.IsNullOrEmpty(jobName))
+            {
+
+            }
+            else
+            {
+
+            }          */
+
             return View();
         }
 
@@ -365,7 +380,14 @@ namespace MvcAuth.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LocationPost(string jobName, string categoryName)
         {
-            return RedirectToAction("Location");
+            if (Request.Form["category"] != null)
+            {
+                return RedirectToAction("Location", new { CategoryName = categoryName });
+            }
+            else
+            {
+                return RedirectToAction("Location", new { jobName = jobName });
+            }
         }
 
 

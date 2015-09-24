@@ -187,6 +187,7 @@
     <Compile Include="Models\Density.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\JobCount.cs" />
+    <Compile Include="Models\Location.cs" />
     <Compile Include="Models\StatisticsViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\TrendingJobsController.cs" />
