@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -212,24 +213,31 @@ namespace MvcAuth.Controllers
             ViewBag.statsPage = statsPages;
             ViewBag.JobList = db.Jobs.Select(j => j.Name).ToList();
             Random rand = new Random();
-            JobCount jobCount,count;
+            JobCount jobCount;
+            int counter = 0;
             Job job,name;
+            List<JobCount> g;           
             var series = new List<Series>();
             if (string.IsNullOrEmpty(jobName) && string.IsNullOrEmpty(categoryName))
             {
                 /* Render default graph ie the first job in database */
                 //iterate through all db vals
                 List<int> jobids = db.Jobs.Select(j => j.ID).ToList();
-                int b;
+                int b,d;
                 for(int k=0; k<=6; k++)
                 {
                     b = jobids.ElementAt(k);
-                    count = db.JobCounts.SingleOrDefault(a => a.JobID == b);
-                    name = db.Jobs.SingleOrDefault(j => j.ID == b);
+                    job = db.Jobs.SingleOrDefault(a => a.ID == b);
+                    name = db.Jobs.SingleOrDefault(a => a.ID == b);
+                    g = job.JobCounts.ToList();
+                    foreach (JobCount jbs in g)
+                    {
+                        counter = +jbs.Count;
+                    }
                     series.Add(new Series
                     {
                         Name = name.Name, 
-                        Data = new Data(new object[] { count.Count })
+                        Data = new Data(new object[] {counter})
                     });
                 }
             }
@@ -350,7 +358,7 @@ namespace MvcAuth.Controllers
                 return RedirectToAction("TrendingJobs", new { jobName = jobName });
             }
         }
-
+        
 
         public ActionResult Location(string jobName, string categoryName)
         {
