@@ -5,7 +5,7 @@
 <script src="@Url.Content("~/Scripts/js/highmaps.js")"></script>
 <script src="@Url.Content("~/Scripts/us-az-all.js")"></script>
 
-<h2>Location</h2>
+<h2>Job Location Statistics</h2>
 
 <style type='text/css'>
   container {
@@ -21,27 +21,21 @@
     color: gray;
   }
 </style>
-
-<div class="btn-group">
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Other Statistics <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu">
-        @foreach (var job in ViewBag.statsPage)
-        {
-            <li>@Html.ActionLink((string)@job, (String)@job, "Statistics")</li>
-        }
-    </ul>
-</div>
-
-
- 
-
+@*
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Other Statistics <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            @foreach (var job in ViewBag.statsPage)
+            {
+                <li>@Html.ActionLink((string)@job, (String)@job, "Statistics")</li>
+            }
+        </ul>
+    </div>
+*@
 
 <div id="container" style="min-width: 310px; max-width: 400px"></div>
-
-
-
   <script type="text/javascript">
     $(document).ready(function ()
     {
@@ -119,7 +113,7 @@
 
 
         title: {
-          text: 'Highmaps basic demo'
+          text: 'Map of Arizona Counties'
         },
 
 
@@ -157,4 +151,6 @@
     @Html.Partial("_PartialForm", new MvcAuth.Models.Job())
 </div>
 
+<br />
 
+<p>Location description paragraph placeholder.</p>
