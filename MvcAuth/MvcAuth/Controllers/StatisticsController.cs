@@ -265,20 +265,32 @@ namespace MvcAuth.Controllers
             List<String> statsPages = new List<String> { "TrendingJobs", "PayStats", "Location" };
             ViewBag.statsPage = statsPages;
             ViewBag.JobList = db.Jobs.Select(j => j.Name).ToList();
-            Job jobo;
-            if (string.IsNullOrEmpty(jobName)) {
-                jobo = db.Jobs.First();
-            }
-            else {
-                try {
-                    jobo = db.Jobs.Single(j => j.Name == jobName);
+            
+            Job job;
+            List<Job> jobs = new List<Job>();
+            if (Request.Form["job"] != null) // Check which button was pressed here
+            {
+                job = db.Jobs.FirstOrDefault(j => j.Name == jobName); // Check if Job is in database
+                if (job == null)
+                {
+                    jobs.Add(db.Jobs.First()); // Add default Job
                 }
-                catch (System.ArgumentNullException) {
-                    jobo = db.Jobs.First();
+                else
+                {
+                    jobs.Add(job);
                 }
             }
-            List<string> counties = new List<string> { "Maricopa", "Coconino", "Gila", "Pima", "Pinal", "Yavapai", "Mohave", "Cochise", "Najavo", "Graham", "La Paz", "Apache", "Yuma", "Santa Cruz", "Greenlee" };
-            var dens = jobo.Densities.ToArray();
+            else 
+            {
+                // Handle Category of Jobs here later
+                // Add default Job so program doesn't crash
+                jobs.Add(db.Jobs.First());
+            }
+            List<string> counties = new List<string> { 
+                "Maricopa", "Coconino", "Gila", "Pima", "Pinal", "Yavapai", "Mohave", "Cochise", "Najavo", "Graham", "La Paz", "Apache", "Yuma", "Santa Cruz", "Greenlee" 
+            };
+            // Try a single job versus a Category
+            var dens = jobs[0].Densities.ToArray();
             string jsonString = "";
             jsonString += "[";
             for (int i=0; i<dens.Count(); i++) 
