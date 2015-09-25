@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -206,30 +206,99 @@ namespace MvcAuth.Controllers
         }
 
         [HttpGet]
-        public ActionResult TrendingJobs()
+        public ActionResult TrendingJobs(string jobName, string categoryName)
         {
             List<String> statsPages = new List<String> { "TrendingJobs", "PayStats", "Location" };
             ViewBag.statsPage = statsPages;
             ViewBag.JobList = db.Jobs.Select(j => j.Name).ToList();
             Random rand = new Random();
-            var trendinJobs = new List<trendingJobs>
+            JobCount jobCount;
+            int counter = 0;
+            Job job,name;
+            List<JobCount> g;           
+            var series = new List<Series>();
+            if (string.IsNullOrEmpty(jobName) && string.IsNullOrEmpty(categoryName))
             {
-                
-                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "software Engineer"},
-                new trendingJobs(){ rateofGrowth = 40, Jobs = "mining"},
-                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "gaming"},
-                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "nursing"},
-                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "physician Assistant"},
-                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "dentist"},
-                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "musician"},
-                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "policeman"},
-                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "anchor"},
-                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "university lecturer"},
-                new trendingJobs(){ rateofGrowth =rand.Next(0,100), Jobs = "Mage"},
-            };
+                /* Render default graph ie the first job in database */
+                //iterate through all db vals
+                List<int> jobids = db.Jobs.Select(j => j.ID).ToList();
+                int b,d;
+                for(int k=0; k<=6; k++)
+                {
+                    b = jobids.ElementAt(k);
+                    job = db.Jobs.SingleOrDefault(a => a.ID == b);
+                    name = db.Jobs.SingleOrDefault(a => a.ID == b);
+                    g = job.JobCounts.ToList();
+                    foreach (JobCount jbs in g)
+                    {
+                        counter = +jbs.Count;
+                    }
+                    series.Add(new Series
+                    {
+                        Name = name.Name, 
+                        Data = new Data(new object[] {counter})
+                    });
+                }
+            }
+            else if (!string.IsNullOrEmpty(jobName))
+            {
+                try
+                {
+                    /* User hit submit button next to job list or GET with jobName query string */
+                    /* try-catch here in case query string is not a job in our database */
+                    job = db.Jobs.SingleOrDefault(j => j.Name == jobName);
+                    jobCount = db.JobCounts.First();
 
-            var yRateOfGrowth = trendinJobs.Select(i => new Object[] { i.rateofGrowth }).ToArray();
-            var xJobs = trendinJobs.Select(i => i.Jobs.ToString()).ToArray();
+                    series.Add(new Series
+                    {
+                        Name = job.Name,
+                        Data = new Data(new object[] { db.Jobs.Select(a => a.Name).ToArray() })
+                    });
+                }
+                catch (System.ArgumentNullException)
+                {
+                    Console.WriteLine("Job does not exist.");
+                    /* Add default data */
+                    job = db.Jobs.SingleOrDefault(j => j.Name == jobName);
+                    jobCount = db.JobCounts.First();
+
+                    series.Add(new Series
+                    {
+                        Name = job.Name,
+                        Data = new Data(new object[] { db.Jobs.Select(a => a.Name).ToArray() })
+                    });
+                }
+            }
+            else
+            {
+                try
+                {
+                    Category ourCategory = (Category)Enum.Parse(typeof(Category), categoryName);
+                    foreach (Job j in db.Jobs)
+                    {
+                        if (j.Category == ourCategory)
+                        {
+                            series.Add(new Series
+                            {
+                                Name = j.Name,
+                                Data = new Data(new object[] { j.Name })
+                            });
+                        }
+                    }
+                }
+                catch (System.ArgumentNullException)
+                {
+                    Console.WriteLine("Category does not exist.");
+                    job = db.Jobs.SingleOrDefault(j => j.Name == jobName);
+                    jobCount = db.JobCounts.First();
+
+                    series.Add(new Series
+                    {
+                        Name = job.Name,
+                        Data = new Data(new object[] { db.Jobs.Select(a => a.Name).ToArray() })
+                    });
+                }
+            }          
 
             /* create Highchart type */
             var chart = new Highcharts("chart")
@@ -240,45 +309,35 @@ namespace MvcAuth.Controllers
                 /* Small title below main title */
                         .SetSubtitle(new Subtitle { Text = "Statistics" })
                 /* Load x values */
-                        .SetXAxis(new XAxis { Categories = xJobs })
+                        .SetXAxis(new XAxis
+                        {
+                            Categories = new[] { "Popular Jobs" },
+                            Title = new XAxisTitle { Text = string.Empty }
+                        })
                 /* Title of Y axis */
                         .SetYAxis(new YAxis { Title = new YAxisTitle { Text = "RateOfGrowth (%)" } })
-                        .SetTooltip(new Tooltip
-                        {
-                            Enabled = true,
-                            Formatter = @"function() { return '<b>'+ this.series.name + '</b><br/>'+ this.x +': '+ this.y; }"
-                        })
-                        .SetPlotOptions(new PlotOptions
-                        {
-                            /*
-                            Line = new PlotOptionsLine
-                            {
-                                DataLabels = new PlotOptionsLineDataLabels
-                                {
-                                    Enabled = true
-                                },
-                                EnableMouseTracking = false
-                            },
-                            */
-
-                            Area = new PlotOptionsArea
-                            {
-                                FillColor = new BackColorOrGradient(new Gradient
-                                {
-                                    LinearGradient = new[] { 0, 0, 0, 300 },
-                                    Stops = new object[,] { { 0, "rgb(116, 116, 116)" }, { 1, Color.Gold } }
-                                }),
-                                LineWidth = 1,
-                                LineColor = Color.BlanchedAlmond,
-                            }
-                        })
-                /* Load Y values */
-                        .SetSeries(new[] 
-                        {
-                            new Series { Name = "Jobs", Data = new Data(yRateOfGrowth) },
-                            /* add more y data to create a second line */
-                            /* new Series { Name = "Other Name", Data = new Data(OtherData) } */
-                        });
+                        .SetTooltip(new Tooltip { Formatter = "function() { return ''+ this.series.name +': '+ this.y ; }" })
+              .SetPlotOptions(new PlotOptions
+              {
+                  Bar = new PlotOptionsBar
+                  {
+                      DataLabels = new PlotOptionsBarDataLabels { Enabled = true }
+                  }
+              })
+              .SetLegend(new Legend
+              {
+                  Layout = Layouts.Vertical,
+                  Align = HorizontalAligns.Right,
+                  VerticalAlign = VerticalAligns.Top,
+                  X = -100,
+                  Y = 100,
+                  Floating = true,
+                  BorderWidth = 1,
+                  BackgroundColor = new BackColorOrGradient(ColorTranslator.FromHtml("#FFFFFF")),
+                  Shadow = true
+              })
+              .SetCredits(new Credits { Enabled = false })
+                .SetSeries(series.ToArray());
 
             return View(chart);
 
@@ -289,7 +348,14 @@ namespace MvcAuth.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult TrendingJobsPost(string jobName, string categoryName) 
         {
-            return RedirectToAction("TrendingJobs");
+              if (Request.Form["category"] != null)
+            {
+                return RedirectToAction("TrendingJobs", new { CategoryName = categoryName });
+            }
+            else
+            {
+                return RedirectToAction("TrendingJobs", new { jobName = jobName });
+            }
         }
 
         public ActionResult Location(string jobName)

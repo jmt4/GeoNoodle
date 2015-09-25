@@ -1,11 +1,14 @@
-﻿
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 @{
     ViewBag.Title = "Location";
 }
 <script src="@Url.Content("~/Scripts/js/highmaps.js")"></script>
 <script src="@Url.Content("~/Scripts/us-az-all.js")"></script>
 
-<h2>Location</h2>
+<h2>Job Location Statistics</h2>
+
 <style type='text/css'>
   container {
     height: 500px;
@@ -20,35 +23,92 @@
     color: gray;
   }
 </style>
-
-<div class="btn-group">
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Other Statistics <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu">
-        @foreach (var job in ViewBag.statsPage)
-        {
-            <li>@Html.ActionLink((string)@job, (String)@job, "Statistics")</li>
-        }
-    </ul>
-</div>
-
-
- 
-
+@*
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Other Statistics <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            @foreach (var job in ViewBag.statsPage)
+            {
+                <li>@Html.ActionLink((string)@job, (String)@job, "Statistics")</li>
+            }
+        </ul>
+    </div>
+*@
 
 <div id="container" style="min-width: 310px; max-width: 400px"></div>
 
-
-}
   <script type="text/javascript">
     $(document).ready(function ()
     {
       var chart;
       // Prepare demo data
-      var dataString = '@ViewBag.Data';
-      dataString = $(dataString).replace(/&quot;/g, '"');
-      var data = JSON.parse(dataString);
+      //var dataString = '@ViewBag.Data';
+      //dataString = $(dataString).replace(/&quot;/g, '"');
+      //var data = JSON.parse(dataString);
+      var data = [
+          {
+            "hc-key": "us-az-011",
+            "value": 0
+          },
+          {
+            "hc-key": "us-az-001",
+            "value": 0
+          },
+          {
+            "hc-key": "us-az-003",
+            "value": 0
+          },
+          {
+            "hc-key": "us-az-012",
+            "value": 0
+          },
+          {
+            "hc-key": "us-az-013",
+            "value": 0
+          },
+          {
+            "hc-key": "us-az-005",
+            "value": 0
+          },
+          {
+            "hc-key": "us-az-007",
+            "value": 0
+          },
+          {
+            "hc-key": "us-az-021",
+            "value": 0
+          },
+          {
+            "hc-key": "us-az-009",
+            "value": 0
+          },
+          {
+            "hc-key": "us-az-015",
+            "value": 0
+          },
+          {
+            "hc-key": "us-az-017",
+            "value": 0
+          },
+          {
+            "hc-key": "us-az-027",
+            "value": 0
+          },
+          {
+            "hc-key": "us-az-023",
+            "value": 0
+          },
+          {
+            "hc-key": "us-az-025",
+            "value": 0
+          },
+          {
+            "hc-key": "us-az-019",
+            "value": 1
+          }
+      ];
 
       // Initiate the chart
       chart = new Highcharts.Map({
@@ -59,7 +119,7 @@
 
 
         title: {
-          text: 'Highmaps basic demo'
+          text: 'Map of Arizona Counties'
         },
 
 
@@ -77,7 +137,7 @@
         series: [{
           data: data,
           mapData: Highcharts.maps['countries/us/us-az-all'],
-          joinBy: 'name',
+          joinBy: 'hc-key',
           name: 'Random data',
           states: {
             hover: {
@@ -97,4 +157,6 @@
     @Html.Partial("_PartialForm", new MvcAuth.Models.Job())
 </div>
 
+<br />
 
+<p>Location description paragraph placeholder.</p>
