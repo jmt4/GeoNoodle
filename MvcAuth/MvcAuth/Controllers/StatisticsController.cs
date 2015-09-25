@@ -292,11 +292,36 @@ namespace MvcAuth.Controllers
             return RedirectToAction("TrendingJobs");
         }
 
-        public ActionResult Location()
+        public ActionResult Location(string jobName)
         {
             List<String> statsPages = new List<String> { "TrendingJobs", "PayStats", "Location" };
             ViewBag.statsPage = statsPages;
             ViewBag.JobList = db.Jobs.Select(j => j.Name).ToList();
+            Job jobo;
+            if (string.IsNullOrEmpty(jobName)) {
+                jobo = db.Jobs.First();
+            }
+            else {
+                try {
+                    jobo = db.Jobs.Single(j => j.Name == jobName);
+                }
+                catch (System.ArgumentNullException) {
+                    jobo = db.Jobs.First();
+                }
+            }
+            List<string> counties = new List<string> { "Maricopa", "Coconino", "Gila", "Pima", "Pinal", "Yavapai", "Mohave", "Cochise", "Najavo", "Graham", "La Paz", "Apache", "Yuma", "Santa Cruz", "Greenlee" };
+            var dens = jobo.Densities.ToArray();
+            string jsonString = "";
+            jsonString += "[";
+            for (int i=0; i<dens.Count(); i++) 
+            {
+                jsonString += "{ ";
+                jsonString += string.Format("\"name\": \"{0}\" , \"value\": {1}", counties[i], dens[i].Value);
+                jsonString += " },";
+                //System.Diagnostics.Debug.WriteLine(d.County);
+            }
+            jsonString += "]";
+            ViewBag.Data = jsonString;
             return View();
         }
 
