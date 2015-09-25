@@ -20,7 +20,6 @@ namespace MvcAuth.Controllers
     {
         private StatisticsDBContext db = new StatisticsDBContext();
 
-        [HttpGet]
         public ActionResult PayStats(string jobName, string categoryName)
         {
             List<String> statsPages = new List<String> { "TrendingJobs", "PayStats", "Location" };
@@ -29,71 +28,42 @@ namespace MvcAuth.Controllers
             ViewBag.JobList = db.Jobs.Select(j => j.Name).ToList();
 
             Job job;
-            var series = new List<Series>();
-            if (string.IsNullOrEmpty(jobName) && string.IsNullOrEmpty(categoryName))
+            List<Job> jobs = new List<Job>();
+            var series = new List<Series>(); // data series for high chart
+
+            if (Request.Form["job"] != null) // Check which button was pressed here
             {
-                /* Render default graph ie the first job in database */
-                job = db.Jobs.First();
-                series.Add(new Series
+                job = db.Jobs.FirstOrDefault(j => j.Name == jobName); // Check if Job is in database
+                if (job == null)
                 {
-                    Name = job.Name,
-                    Data = new Data(new object[] { job.Bottom10Pay, job.MedianPay, job.Top10Pay, })
-                });
-            }
-            else if (!string.IsNullOrEmpty(jobName))
-            {
-                try
-                {
-                    /* User hit submit button next to job list or GET with jobName query string */
-                    /* try-catch here in case query string is not a job in our database */
-                    job = db.Jobs.SingleOrDefault(j => j.Name == jobName);
-                    series.Add(new Series
-                    {
-                        Name = job.Name,
-                        Data = new Data(new object[] { job.Bottom10Pay, job.MedianPay, job.Top10Pay, })
-                    });
+                    jobs.Add(db.Jobs.First());
                 }
-                catch (System.ArgumentNullException)
+                else
                 {
-                    Console.WriteLine("Job does not exist.");
-                    /* Add default data */
-                    job = db.Jobs.First();
-                    series.Add(new Series
-                    {
-                        Name = job.Name,
-                        Data = new Data(new object[] { job.Bottom10Pay, job.MedianPay, job.Top10Pay, })
-                    });
+                    jobs.Add(job);
                 }
             }
             else
             {
-                try
+                Category ourCategory;
+                if (Enum.TryParse(categoryName, out ourCategory)) // Check if Category is in database
                 {
-                    Category ourCategory = (Category)Enum.Parse(typeof(Category), categoryName);
-                    foreach (Job j in db.Jobs)
-                    {
-                        if (j.Category == ourCategory)
-                        {
-                            series.Add(new Series
-                            {
-                                Name = j.Name,
-                                Data = new Data(new object[] { j.Bottom10Pay, j.MedianPay, j.Top10Pay, })
-                            });
-                        }
-                    }
+                    jobs = db.Jobs.Where(j => j.Category == ourCategory).ToList();
                 }
-                catch (System.ArgumentNullException)
+                else
                 {
-                    Console.WriteLine("Category does not exist.");
-                    job = db.Jobs.First();
-                    series.Add(new Series
-                    {
-                        Name = job.Name,
-                        Data = new Data(new object[] { job.Bottom10Pay, job.MedianPay, job.Top10Pay, })
-                    });
+                    jobs.Add(db.Jobs.First());
                 }
             }
-
+            foreach (Job j in jobs) // Add each job to data series
+            {
+                series.Add(new Series
+                {
+                    Name = j.Name,
+                    Data = new Data(new object[] { j.Bottom10Pay, j.MedianPay, j.Top10Pay, })
+                });
+            } 
+            
             Highcharts chart = new Highcharts("chart")
               .InitChart(new Chart { DefaultSeriesType = ChartTypes.Bar })
               .SetTitle(new Title { Text = "Historic World Population by Region" })
@@ -135,23 +105,6 @@ namespace MvcAuth.Controllers
               .SetCredits(new Credits { Enabled = false })
               .SetSeries(series.ToArray());
             return View(chart);
-        }
-
-        [HttpPost]
-        [ActionName("PayStats")]
-        [ValidateAntiForgeryToken]
-        public ActionResult PayStatsPost(string jobName, string categoryName)
-        {
-            /* Statistics/_PartialForm.cshtml posts to 'PayStats' hence the [ActionName] decorator. */
-            /* VS complains if controller method headers (name, params) are identical. */
-            if (Request.Form["category"] != null)
-            {
-                return RedirectToAction("PayStats", new { CategoryName = categoryName });
-            }
-            else
-            {
-                return RedirectToAction("PayStats", new { jobName = jobName });
-            }
         }
 
         public ActionResult CompareSalaries()
