@@ -260,48 +260,62 @@ namespace MvcAuth.Controllers
             }
         }
 
-        public ActionResult Location(string jobName)
+        public ActionResult Location(string jobName, string categoryName)
         {
-            List<String> statsPages = new List<String> { "TrendingJobs", "PayStats", "Location" };
-            ViewBag.statsPage = statsPages;
-            ViewBag.JobList = db.Jobs.Select(j => j.Name).ToList();
+            //ViewBag.JobList = db.Jobs.Select(j => j.Name).ToList();
             
             Job job;
             List<Job> jobs = new List<Job>();
+            
+            //Based on user query, build list of jobs to consider
             if (Request.Form["job"] != null) // Check which button was pressed here
             {
                 job = db.Jobs.FirstOrDefault(j => j.Name == jobName); // Check if Job is in database
                 if (job == null)
                 {
-                    jobs.Add(db.Jobs.First()); // Add default Job
+                    jobs.Add(db.Jobs.First());
                 }
                 else
                 {
                     jobs.Add(job);
                 }
             }
-            else 
+            else
             {
-                // Handle Category of Jobs here later
-                // Add default Job so program doesn't crash
-                jobs.Add(db.Jobs.First());
+                Category ourCategory;
+                if (Enum.TryParse(categoryName, out ourCategory)) // Check if Category is in database
+                {
+                    jobs = db.Jobs.Where(j => j.Category == ourCategory).ToList();
+                }
+                else
+                {
+                    jobs.Add(db.Jobs.First());
+                }
             }
+
             List<string> counties = new List<string> { 
                 "Maricopa", "Coconino", "Gila", "Pima", "Pinal", "Yavapai", "Mohave", "Cochise", "Najavo", "Graham", "La Paz", "Apache", "Yuma", "Santa Cruz", "Greenlee" 
             };
-            // Try a single job versus a Category
-            var dens = jobs[0].Densities.ToArray();
-            string jsonString = "";
-            jsonString += "[";
-            for (int i=0; i<dens.Count(); i++) 
+
+            List<Density> densities = db.Densities.ToList();
+            Dictionary<string, int> jobAmounts = new Dictionary<string, int>();
+
+            //Iterate through each county and job selected to find the amount of jobs in that county
+            foreach (string c in counties)
             {
-                jsonString += "{ ";
-                jsonString += string.Format("\"name\": \"{0}\" , \"value\": {1}", counties[i], dens[i].Value);
-                jsonString += " },";
-                //System.Diagnostics.Debug.WriteLine(d.County);
+                int count = 0;
+
+                foreach (Job j in jobs)
+                {
+                    County co;
+                    Enum.TryParse<County>(c, out co);
+                    count += db.Densities.FirstOrDefault(x => x.JobID == j.ID && x.County == co).Value; 
+                }
+
+                jobAmounts.Add(c, count);
             }
-            jsonString += "]";
-            ViewBag.Data = jsonString;
+
+            ViewBag.locationData = jobAmounts;
             return View();
         }
 

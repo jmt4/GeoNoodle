@@ -23,90 +23,78 @@
     color: gray;
   }
 </style>
-@*
-    <div class="btn-group">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Other Statistics <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            @foreach (var job in ViewBag.statsPage)
-            {
-                <li>@Html.ActionLink((string)@job, (String)@job, "Statistics")</li>
-            }
-        </ul>
-    </div>
-*@
 
+@if (Model != null) {
 <div id="container" style="min-width: 310px; max-width: 400px"></div>
 
   <script type="text/javascript">
     $(document).ready(function ()
     {
-      var chart;
-      // Prepare demo data
-      //var dataString = '@ViewBag.Data';
-      //dataString = $(dataString).replace(/&quot;/g, '"');
-      //var data = JSON.parse(dataString);
-      var data = [
+        var chart;
+        // Prepare demo data
+        //var dataString = '@ViewBag.Data';
+        //dataString = $(dataString).replace(/&quot;/g, '"');
+        //var data = JSON.parse(dataString);
+        var data = [
+            {
+                "hc-key": "us-az-011",
+                "value": @ViewBag.locationData["Greenlee"]
+                },
           {
-            "hc-key": "us-az-011",
-            "value": 0
-          },
+              "hc-key": "us-az-001",
+              "value": @ViewBag.locationData["Apache"]
+              },
           {
-            "hc-key": "us-az-001",
-            "value": 0
-          },
+              "hc-key": "us-az-003",
+              "value": @ViewBag.locationData["Cochise"]
+              },
           {
-            "hc-key": "us-az-003",
-            "value": 0
-          },
+              "hc-key": "us-az-012",
+              "value": @ViewBag.locationData["La Paz"]
+              },
           {
-            "hc-key": "us-az-012",
-            "value": 0
-          },
+              "hc-key": "us-az-013",
+              "value": @ViewBag.locationData["Maricopa"]
+              },
           {
-            "hc-key": "us-az-013",
-            "value": 0
-          },
+              "hc-key": "us-az-005",
+              "value": @ViewBag.locationData["Coconino"]
+              },
           {
-            "hc-key": "us-az-005",
-            "value": 0
-          },
+              "hc-key": "us-az-007",
+              "value": @ViewBag.locationData["Gila"]
+              },
           {
-            "hc-key": "us-az-007",
-            "value": 0
-          },
+              "hc-key": "us-az-021",
+              "value": @ViewBag.locationData["Pinal"]
+              },
           {
-            "hc-key": "us-az-021",
-            "value": 0
-          },
+              "hc-key": "us-az-009",
+              "value": @ViewBag.locationData["Graham"]
+              },
           {
-            "hc-key": "us-az-009",
-            "value": 0
-          },
+              "hc-key": "us-az-015",
+              "value": @ViewBag.locationData["Mohave"]
+              },
           {
-            "hc-key": "us-az-015",
-            "value": 0
-          },
+              "hc-key": "us-az-017",
+              "value": @ViewBag.locationData["Navajo"]
+              },
           {
-            "hc-key": "us-az-017",
-            "value": 0
-          },
+              "hc-key": "us-az-027",
+              "value": @ViewBag.locationData["Yuma"]
+              },
           {
-            "hc-key": "us-az-027",
-            "value": 0
-          },
+              "hc-key": "us-az-023",
+              "value": @ViewBag.locationData["Santa Cruz"]
+              },
           {
-            "hc-key": "us-az-023",
-            "value": 0
-          },
-          {
-            "hc-key": "us-az-025",
-            "value": 0
+              "hc-key": "us-az-025",
+              "value": @ViewBag.locationData["Yavapai"]
           },
           {
             "hc-key": "us-az-019",
-            "value": 1
+            "value": @ViewBag.locationData["Pima"]
           }
       ];
 
@@ -153,7 +141,8 @@
       });
     });
   </script>
-
+}
+    
 <div>
     @Html.Partial("_PartialForm", new MvcAuth.Models.Job())
 </div>
