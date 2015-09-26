@@ -51,7 +51,7 @@ namespace MvcAuth.Migrations
             {
                 var rand = new Random();
                 /* Create sequence of zeros then select each and turn into randoms */
-                jobDensities = Enumerable.Repeat(0, 14).Select(i => rand.Next()).ToArray();
+                jobDensities = Enumerable.Repeat(0, 14).Select(i => rand.Next(100,1000)).ToArray();
                 jobCounts = Enumerable.Repeat(0, years.Count()).Select(i => rand.Next(500, 5000)).ToArray();
 
                 var densities = jobDensities.Zip(counties, (d, c) => new  Density { County = c, Value = d, Job = job, JobID = job.ID }).ToList();
