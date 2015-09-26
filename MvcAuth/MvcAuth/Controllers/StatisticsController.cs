@@ -262,7 +262,7 @@ namespace MvcAuth.Controllers
 
         public ActionResult Location(string jobName, string categoryName)
         {
-            //ViewBag.JobList = db.Jobs.Select(j => j.Name).ToList();
+            ViewBag.JobList = db.Jobs.Select(j => j.Name).ToList();
             
             Job job;
             List<Job> jobs = new List<Job>();
@@ -294,7 +294,7 @@ namespace MvcAuth.Controllers
             }
 
             List<string> counties = new List<string> { 
-                "Maricopa", "Coconino", "Gila", "Pima", "Pinal", "Yavapai", "Mohave", "Cochise", "Najavo", "Graham", "La Paz", "Apache", "Yuma", "Santa Cruz", "Greenlee" 
+                "Maricopa", "Coconino", "Gila", "Pima", "Pinal", "Yavapai", "Mohave", "Cochise", "Navajo", "Graham", "La Paz", "Apache", "Yuma", "Santa Cruz", "Greenlee" 
             };
 
             List<Density> densities = db.Densities.ToList();
@@ -309,7 +309,8 @@ namespace MvcAuth.Controllers
                 {
                     County co;
                     Enum.TryParse<County>(c, out co);
-                    count += db.Densities.FirstOrDefault(x => x.JobID == j.ID && x.County == co).Value; 
+                    //count += db.Densities.FirstOrDefault(x => x.JobID == j.ID && x.County == co).Value; 
+                    count += 1;                
                 }
 
                 jobAmounts.Add(c, count);
@@ -324,7 +325,14 @@ namespace MvcAuth.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LocationPost(string jobName, string categoryName)
         {
-            return RedirectToAction("Location");
+            if (Request.Form["category"] != null)
+            {
+                return RedirectToAction("Location", new { CategoryName = categoryName });
+            }
+            else
+            {
+                return RedirectToAction("Location", new { jobName = jobName });
+            }
         }
 
 
