@@ -30,10 +30,7 @@
     $(document).ready(function ()
     {
         var chart;
-        // Prepare demo data
-        //var dataString = '@ViewBag.Data';
-        //dataString = $(dataString).replace(/&quot;/g, '"');
-        //var data = JSON.parse(dataString);
+
         var data = [
             {
                 "hc-key": "us-az-011",
@@ -147,4 +144,9 @@
 
 <br />
 
-<p>Location description paragraph placeholder.</p>
+<p>You can choose to search the location of jobs by category or individually. 
+    A category search will reveal how many jobs in a general field appear in 
+    the different state counties. Individual search only counts the amount of 
+    positions for a specific job per county. Darker blue indicates a higher 
+    concentration of the queried job. This tool should help you determine 
+    where you need to live in order to find the job you desire. </p>

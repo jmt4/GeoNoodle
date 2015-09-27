@@ -309,8 +309,10 @@ namespace MvcAuth.Controllers
                 {
                     County co;
                     Enum.TryParse<County>(c, out co);
-                    //count += db.Densities.FirstOrDefault(x => x.JobID == j.ID && x.County == co).Value; 
-                    count += 1;                
+                    Density dense = db.Densities.FirstOrDefault(x => x.JobID == j.ID && x.County == co);
+
+                    if (dense != null)
+                        count += dense.Value;                
                 }
 
                 jobAmounts.Add(c, count);
@@ -320,6 +322,7 @@ namespace MvcAuth.Controllers
             return View();
         }
 
+        /*
         [HttpPost]
         [ActionName("Location")]
         [ValidateAntiForgeryToken]
@@ -331,9 +334,9 @@ namespace MvcAuth.Controllers
             }
             else
             {
-                return RedirectToAction("Location", new { jobName = jobName });
+                return RedirectToAction("Location", new { JobName = jobName });
             }
-        }
+        }*/
 
 
         /******************************************************************************/
