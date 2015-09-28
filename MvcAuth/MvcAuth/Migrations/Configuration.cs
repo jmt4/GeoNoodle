@@ -40,7 +40,7 @@ namespace MvcAuth.Migrations
             /* Create a list of counties from our enum in Density.cs */
             County[] counties = (County[])Enum.GetValues(typeof(County));
             var years = Enumerable.Range(2000, 15);
-            double[] jobDensities;
+            int[] jobDensities;
             int[] jobCounts;
             /* For each job in jobs list, create a new array of random doubles */
             /* then iterate through counties and jobDensities simultaneously */
@@ -51,7 +51,7 @@ namespace MvcAuth.Migrations
             {
                 var rand = new Random();
                 /* Create sequence of zeros then select each and turn into randoms */
-                jobDensities = Enumerable.Repeat(0, 10).Select(i => rand.NextDouble()).ToArray();
+                jobDensities = Enumerable.Repeat(0, 15).Select(i => rand.Next(100,1000)).ToArray();
                 jobCounts = Enumerable.Repeat(0, years.Count()).Select(i => rand.Next(500, 5000)).ToArray();
 
                 var densities = jobDensities.Zip(counties, (d, c) => new  Density { County = c, Value = d, Job = job, JobID = job.ID }).ToList();

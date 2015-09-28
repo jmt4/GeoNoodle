@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -21,7 +20,6 @@ namespace MvcAuth.Controllers
     {
         private StatisticsDBContext db = new StatisticsDBContext();
 
-        [HttpGet]
         public ActionResult PayStats(string jobName, string categoryName)
         {
             List<String> statsPages = new List<String> { "TrendingJobs", "PayStats", "Location" };
@@ -30,71 +28,42 @@ namespace MvcAuth.Controllers
             ViewBag.JobList = db.Jobs.Select(j => j.Name).ToList();
 
             Job job;
-            var series = new List<Series>();
-            if (string.IsNullOrEmpty(jobName) && string.IsNullOrEmpty(categoryName))
+            List<Job> jobs = new List<Job>();
+            var series = new List<Series>(); // data series for high chart
+
+            if (Request.Form["job"] != null) // Check which button was pressed here
             {
-                /* Render default graph ie the first job in database */
-                job = db.Jobs.First();
-                series.Add(new Series
+                job = db.Jobs.FirstOrDefault(j => j.Name == jobName); // Check if Job is in database
+                if (job == null)
                 {
-                    Name = job.Name,
-                    Data = new Data(new object[] { job.Bottom10Pay, job.MedianPay, job.Top10Pay, })
-                });
-            }
-            else if (!string.IsNullOrEmpty(jobName))
-            {
-                try
-                {
-                    /* User hit submit button next to job list or GET with jobName query string */
-                    /* try-catch here in case query string is not a job in our database */
-                    job = db.Jobs.SingleOrDefault(j => j.Name == jobName);
-                    series.Add(new Series
-                    {
-                        Name = job.Name,
-                        Data = new Data(new object[] { job.Bottom10Pay, job.MedianPay, job.Top10Pay, })
-                    });
+                    jobs.Add(db.Jobs.First());
                 }
-                catch (System.ArgumentNullException)
+                else
                 {
-                    Console.WriteLine("Job does not exist.");
-                    /* Add default data */
-                    job = db.Jobs.First();
-                    series.Add(new Series
-                    {
-                        Name = job.Name,
-                        Data = new Data(new object[] { job.Bottom10Pay, job.MedianPay, job.Top10Pay, })
-                    });
+                    jobs.Add(job);
                 }
             }
             else
             {
-                try
+                Category ourCategory;
+                if (Enum.TryParse(categoryName, out ourCategory)) // Check if Category is in database
                 {
-                    Category ourCategory = (Category)Enum.Parse(typeof(Category), categoryName);
-                    foreach (Job j in db.Jobs)
-                    {
-                        if (j.Category == ourCategory)
-                        {
-                            series.Add(new Series
-                            {
-                                Name = j.Name,
-                                Data = new Data(new object[] { j.Bottom10Pay, j.MedianPay, j.Top10Pay, })
-                            });
-                        }
-                    }
+                    jobs = db.Jobs.Where(j => j.Category == ourCategory).ToList();
                 }
-                catch (System.ArgumentNullException)
+                else
                 {
-                    Console.WriteLine("Category does not exist.");
-                    job = db.Jobs.First();
-                    series.Add(new Series
-                    {
-                        Name = job.Name,
-                        Data = new Data(new object[] { job.Bottom10Pay, job.MedianPay, job.Top10Pay, })
-                    });
+                    jobs.Add(db.Jobs.First());
                 }
             }
-
+            foreach (Job j in jobs) // Add each job to data series
+            {
+                series.Add(new Series
+                {
+                    Name = j.Name,
+                    Data = new Data(new object[] { j.Bottom10Pay, j.MedianPay, j.Top10Pay, })
+                });
+            } 
+            
             Highcharts chart = new Highcharts("chart")
               .InitChart(new Chart { DefaultSeriesType = ChartTypes.Bar })
               .SetTitle(new Title { Text = "Historic World Population by Region" })
@@ -138,74 +107,6 @@ namespace MvcAuth.Controllers
             return View(chart);
         }
 
-        [HttpPost]
-        [ActionName("PayStats")]
-        [ValidateAntiForgeryToken]
-        public ActionResult PayStatsPost(string jobName, string categoryName)
-        {
-            /* Statistics/_PartialForm.cshtml posts to 'PayStats' hence the [ActionName] decorator. */
-            /* VS complains if controller method headers (name, params) are identical. */
-            if (Request.Form["category"] != null)
-            {
-                return RedirectToAction("PayStats", new { CategoryName = categoryName });
-            }
-            else
-            {
-                return RedirectToAction("PayStats", new { jobName = jobName });
-            }
-        }
-
-        public ActionResult CompareSalaries()
-        {
-            Highcharts chart = new Highcharts("chart")
-                .InitChart(new Chart { DefaultSeriesType = ChartTypes.Bar })
-                .SetTitle(new Title { Text = "Historic World Population by Region" })
-                //.SetSubtitle(new Subtitle { Text = "Source: Wikipedia.org" })
-                .SetXAxis(new XAxis
-                {
-                    Categories = new[] { "Bottom 10%", "Medium", "Top 10%" },
-                    Title = new XAxisTitle { Text = string.Empty }
-                })
-                .SetYAxis(new YAxis
-                {
-                    Min = 0,
-                    Title = new YAxisTitle
-                    {
-                        Text = "Salary",
-                        Align = AxisTitleAligns.High
-                    }
-                })
-                .SetTooltip(new Tooltip { Formatter = "function() { return ''+ this.series.name +': '+ this.y ; }" })
-                .SetPlotOptions(new PlotOptions
-                {
-                    Bar = new PlotOptionsBar
-                    {
-                        DataLabels = new PlotOptionsBarDataLabels { Enabled = true }
-                    }
-                })
-                .SetLegend(new Legend
-                {
-                    Layout = Layouts.Vertical,
-                    Align = HorizontalAligns.Right,
-                    VerticalAlign = VerticalAligns.Top,
-                    X = -100,
-                    Y = 100,
-                    Floating = true,
-                    BorderWidth = 1,
-                    BackgroundColor = new BackColorOrGradient(ColorTranslator.FromHtml("#FFFFFF")),
-                    Shadow = true
-                })
-                .SetCredits(new Credits { Enabled = false })
-                .SetSeries(new[]
-                {
-                    new Series { Name = "Physician", Data = new Data(new object[] { 80000, 125000, 215000,  }) },
-                    new Series { Name = "Software Engineer", Data = new Data(new object[] { 39000, 89000, 123000 }) },
-                    new Series { Name = "Botanist", Data = new Data(new object[] { 33000, 56000, 79000 }) }
-                });
-
-            return View(chart);
-        }
-
         [HttpGet]
         public ActionResult TrendingJobs(string jobName, string categoryName)
         {
@@ -224,7 +125,7 @@ namespace MvcAuth.Controllers
                 //iterate through all db vals
                 List<int> jobids = db.Jobs.Select(j => j.ID).ToList();
                 int b,d;
-                for(int k=0; k<=9; k++)
+                for(int k=0; k<=6; k++)
                 {
                     b = jobids.ElementAt(k);
                     job = db.Jobs.SingleOrDefault(a => a.ID == b);
@@ -236,7 +137,7 @@ namespace MvcAuth.Controllers
                     }
                     series.Add(new Series
                     {
-                        Name = name.Name,
+                        Name = name.Name, 
                         Data = new Data(new object[] {counter})
                     });
                 }
@@ -358,23 +259,84 @@ namespace MvcAuth.Controllers
                 return RedirectToAction("TrendingJobs", new { jobName = jobName });
             }
         }
-        
 
-        public ActionResult Location()
+        public ActionResult Location(string jobName, string categoryName)
         {
-            List<String> statsPages = new List<String> { "TrendingJobs", "PayStats", "Location" };
-            ViewBag.statsPage = statsPages;
             ViewBag.JobList = db.Jobs.Select(j => j.Name).ToList();
+            
+            Job job;
+            List<Job> jobs = new List<Job>();
+            
+            //Based on user query, build list of jobs to consider
+            if (Request.Form["job"] != null) // Check which button was pressed here
+            {
+                job = db.Jobs.FirstOrDefault(j => j.Name == jobName); // Check if Job is in database
+                if (job == null)
+                {
+                    jobs.Add(db.Jobs.First());
+                }
+                else
+                {
+                    jobs.Add(job);
+                }
+            }
+            else
+            {
+                Category ourCategory;
+                if (Enum.TryParse(categoryName, out ourCategory)) // Check if Category is in database
+                {
+                    jobs = db.Jobs.Where(j => j.Category == ourCategory).ToList();
+                }
+                else
+                {
+                    jobs.Add(db.Jobs.First());
+                }
+            }
+
+            List<string> counties = new List<string> { 
+                "Maricopa", "Coconino", "Gila", "Pima", "Pinal", "Yavapai", "Mohave", "Cochise", "Navajo", "Graham", "La Paz", "Apache", "Yuma", "Santa Cruz", "Greenlee" 
+            };
+
+            List<Density> densities = db.Densities.ToList();
+            Dictionary<string, int> jobAmounts = new Dictionary<string, int>();
+
+            //Iterate through each county and job selected to find the amount of jobs in that county
+            foreach (string c in counties)
+            {
+                int count = 0;
+
+                foreach (Job j in jobs)
+                {
+                    County co;
+                    Enum.TryParse<County>(c, out co);
+                    Density dense = db.Densities.FirstOrDefault(x => x.JobID == j.ID && x.County == co);
+
+                    if (dense != null)
+                        count += dense.Value;                
+                }
+
+                jobAmounts.Add(c, count);
+            }
+
+            ViewBag.locationData = jobAmounts;
             return View();
         }
 
+        /*
         [HttpPost]
         [ActionName("Location")]
         [ValidateAntiForgeryToken]
         public ActionResult LocationPost(string jobName, string categoryName)
         {
-            return RedirectToAction("Location");
-        }
+            if (Request.Form["category"] != null)
+            {
+                return RedirectToAction("Location", new { CategoryName = categoryName });
+            }
+            else
+            {
+                return RedirectToAction("Location", new { JobName = jobName });
+            }
+        }*/
 
 
         /******************************************************************************/

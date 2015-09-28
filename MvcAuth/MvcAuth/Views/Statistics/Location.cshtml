@@ -1,4 +1,6 @@
-﻿
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 @{
     ViewBag.Title = "Location";
 }
@@ -21,86 +23,74 @@
     color: gray;
   }
 </style>
-@*
-    <div class="btn-group">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Other Statistics <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            @foreach (var job in ViewBag.statsPage)
-            {
-                <li>@Html.ActionLink((string)@job, (String)@job, "Statistics")</li>
-            }
-        </ul>
-    </div>
-*@
 
 <div id="container" style="min-width: 310px; max-width: 400px"></div>
+
   <script type="text/javascript">
     $(document).ready(function ()
     {
-      var chart;
-      // Prepare demo data
-      var data = [
+        var chart;
+
+        var data = [
+            {
+                "hc-key": "us-az-011",
+                "value": @ViewBag.locationData["Greenlee"]
+                },
           {
-            "hc-key": "us-az-011",
-            "value": 0
-          },
+              "hc-key": "us-az-001",
+              "value": @ViewBag.locationData["Apache"]
+              },
           {
-            "hc-key": "us-az-001",
-            "value": 1
-          },
+              "hc-key": "us-az-003",
+              "value": @ViewBag.locationData["Cochise"]
+              },
           {
-            "hc-key": "us-az-003",
-            "value": 2
-          },
+              "hc-key": "us-az-012",
+              "value": @ViewBag.locationData["La Paz"]
+              },
           {
-            "hc-key": "us-az-012",
-            "value": 3
-          },
+              "hc-key": "us-az-013",
+              "value": @ViewBag.locationData["Maricopa"]
+              },
           {
-            "hc-key": "us-az-013",
-            "value": 4
-          },
+              "hc-key": "us-az-005",
+              "value": @ViewBag.locationData["Coconino"]
+              },
           {
-            "hc-key": "us-az-005",
-            "value": 5
-          },
+              "hc-key": "us-az-007",
+              "value": @ViewBag.locationData["Gila"]
+              },
           {
-            "hc-key": "us-az-007",
-            "value": 6
-          },
+              "hc-key": "us-az-021",
+              "value": @ViewBag.locationData["Pinal"]
+              },
           {
-            "hc-key": "us-az-021",
-            "value": 7
-          },
+              "hc-key": "us-az-009",
+              "value": @ViewBag.locationData["Graham"]
+              },
           {
-            "hc-key": "us-az-009",
-            "value": 8
-          },
+              "hc-key": "us-az-015",
+              "value": @ViewBag.locationData["Mohave"]
+              },
           {
-            "hc-key": "us-az-015",
-            "value": 9
-          },
+              "hc-key": "us-az-017",
+              "value": @ViewBag.locationData["Navajo"]
+              },
           {
-            "hc-key": "us-az-017",
-            "value": 10
-          },
+              "hc-key": "us-az-027",
+              "value": @ViewBag.locationData["Yuma"]
+              },
           {
-            "hc-key": "us-az-027",
-            "value": 11
-          },
+              "hc-key": "us-az-023",
+              "value": @ViewBag.locationData["Santa Cruz"]
+              },
           {
-            "hc-key": "us-az-023",
-            "value": 12
-          },
-          {
-            "hc-key": "us-az-025",
-            "value": 13
+              "hc-key": "us-az-025",
+              "value": @ViewBag.locationData["Yavapai"]
           },
           {
             "hc-key": "us-az-019",
-            "value": 14
+            "value": @ViewBag.locationData["Pima"]
           }
       ];
 
@@ -132,6 +122,7 @@
           data: data,
           mapData: Highcharts.maps['countries/us/us-az-all'],
           joinBy: 'hc-key',
+          //joinBy: 'hc-key',
           name: 'Random data',
           states: {
             hover: {
@@ -146,11 +137,16 @@
       });
     });
   </script>
-
+    
 <div>
     @Html.Partial("_PartialForm", new MvcAuth.Models.Job())
 </div>
 
 <br />
 
-<p>Location description paragraph placeholder.</p>
+<p>You can choose to search the location of jobs by category or individually. 
+    A category search will reveal how many jobs in a general field appear in 
+    the different state counties. Individual search only counts the amount of 
+    positions for a specific job per county. Darker blue indicates a higher 
+    concentration of the queried job. This tool should help you determine 
+    where you need to live in order to find the job you desire. </p>
