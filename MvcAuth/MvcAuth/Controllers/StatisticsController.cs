@@ -224,7 +224,7 @@ namespace MvcAuth.Controllers
                 //iterate through all db vals
                 List<int> jobids = db.Jobs.Select(j => j.ID).ToList();
                 int b,d;
-                for(int k=0; k<=6; k++)
+                for(int k=0; k<=9; k++)
                 {
                     b = jobids.ElementAt(k);
                     job = db.Jobs.SingleOrDefault(a => a.ID == b);
