@@ -66,7 +66,7 @@ namespace MvcAuth.Controllers
             
             Highcharts chart = new Highcharts("chart")
               .InitChart(new Chart { DefaultSeriesType = ChartTypes.Bar })
-              .SetTitle(new Title { Text = "Historic World Population by Region" })
+              .SetTitle(new Title { Text = "Salaries For Different Career Levels" })
                 //.SetSubtitle(new Subtitle { Text = "Source: Wikipedia.org" })
               .SetXAxis(new XAxis
               {
