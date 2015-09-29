@@ -66,7 +66,7 @@ namespace MvcAuth.Controllers
             
             Highcharts chart = new Highcharts("chart")
               .InitChart(new Chart { DefaultSeriesType = ChartTypes.Bar })
-              .SetTitle(new Title { Text = "Historic World Population by Region" })
+              .SetTitle(new Title { Text = "Salaries For Different Career Levels" })
                 //.SetSubtitle(new Subtitle { Text = "Source: Wikipedia.org" })
               .SetXAxis(new XAxis
               {
@@ -107,7 +107,7 @@ namespace MvcAuth.Controllers
             return View(chart);
         }
 
-        [HttpGet]
+       
         public ActionResult TrendingJobs(string jobName, string categoryName)
         {
             List<String> statsPages = new List<String> { "TrendingJobs", "PayStats", "Location" };
@@ -119,26 +119,38 @@ namespace MvcAuth.Controllers
             Job job,name;
             List<JobCount> g;           
             var series = new List<Series>();
+            List<int> jobids = db.Jobs.Select(j => j.ID).ToList();
+            Dictionary<string, double> unsortedList = new Dictionary<string, double>();
+            int noOfJobs = db.JobCounts.Sum(p => p.Count);
+            int b, d;
+            for (int k = 0; k <= jobids.Count - 1; k++)
+            {
+                counter = 0;
+                b = jobids.ElementAt(k);
+                job = db.Jobs.SingleOrDefault(a => a.ID == b);
+                name = db.Jobs.SingleOrDefault(a => a.ID == b);
+                g = job.JobCounts.ToList();
+                foreach (JobCount jbs in g)
+                {
+                    counter =counter +jbs.Count;
+                }
+                double percentage = ((double)counter/noOfJobs)*100;
+                unsortedList.Add(name.Name, percentage);
+            }
             if (string.IsNullOrEmpty(jobName) && string.IsNullOrEmpty(categoryName))
             {
                 /* Render default graph ie the first job in database */
                 //iterate through all db vals
-                List<int> jobids = db.Jobs.Select(j => j.ID).ToList();
-                int b,d;
-                for(int k=0; k<=6; k++)
+               
+                var sortedlist =( from pair in unsortedList
+                           orderby pair.Value descending
+                           select pair).Take(10);
+                foreach(KeyValuePair<string,double>pair in sortedlist)
                 {
-                    b = jobids.ElementAt(k);
-                    job = db.Jobs.SingleOrDefault(a => a.ID == b);
-                    name = db.Jobs.SingleOrDefault(a => a.ID == b);
-                    g = job.JobCounts.ToList();
-                    foreach (JobCount jbs in g)
-                    {
-                        counter = +jbs.Count;
-                    }
                     series.Add(new Series
                     {
-                        Name = name.Name, 
-                        Data = new Data(new object[] {counter})
+                        Name = pair.Key,
+                        Data = new Data(new object[] { pair.Value })
                     });
                 }
             }
@@ -150,12 +162,34 @@ namespace MvcAuth.Controllers
                     /* try-catch here in case query string is not a job in our database */
                     job = db.Jobs.SingleOrDefault(j => j.Name == jobName);
                     jobCount = db.JobCounts.First();
+                    Dictionary<string, int> compareList = new Dictionary<string, int>();
+                    var mostPopularJob = (from pair in unsortedList
+                                      orderby pair.Value descending
+                                      select pair).First();
 
+                    var leastPopularJob = (from pair in unsortedList
+                                      orderby pair.Value descending
+                                      select pair).Last();
+                    var thisJob = (from pair in unsortedList
+                                   where pair.Key == jobName
+                                   select pair).First();
+                    
                     series.Add(new Series
                     {
-                        Name = job.Name,
-                        Data = new Data(new object[] { db.Jobs.Select(a => a.Name).ToArray() })
+                        Name = "Least Popular Job "+leastPopularJob.Key,
+                        Data = new Data(new object[] { leastPopularJob.Value })
                     });
+                    series.Add(new Series
+                    {
+                        Name = thisJob.Key,
+                        Data = new Data(new object[] { thisJob.Value})
+                    });
+                    series.Add(new Series
+                    {
+                        Name = "Most Popular Job "+mostPopularJob.Key,
+                        Data = new Data(new object[] { mostPopularJob.Value })
+                    });
+
                 }
                 catch (System.ArgumentNullException)
                 {
@@ -217,7 +251,7 @@ namespace MvcAuth.Controllers
                             Title = new XAxisTitle { Text = string.Empty }
                         })
                 /* Title of Y axis */
-                        .SetYAxis(new YAxis { Title = new YAxisTitle { Text = "RateOfGrowth (%)" } })
+                        .SetYAxis(new YAxis { Title = new YAxisTitle { Text = "Percantage of Jobs (%)" } })
                         .SetTooltip(new Tooltip { Formatter = "function() { return ''+ this.series.name +': '+ this.y ; }" })
               .SetPlotOptions(new PlotOptions
               {
@@ -245,7 +279,7 @@ namespace MvcAuth.Controllers
 
         }
 
-        [HttpPost]
+      /*  [HttpPost]
         [ActionName("TrendingJobs")]
         [ValidateAntiForgeryToken]
         public ActionResult TrendingJobsPost(string jobName, string categoryName) 
@@ -258,7 +292,7 @@ namespace MvcAuth.Controllers
             {
                 return RedirectToAction("TrendingJobs", new { jobName = jobName });
             }
-        }
+        }*/
 
         public ActionResult Location(string jobName, string categoryName)
         {

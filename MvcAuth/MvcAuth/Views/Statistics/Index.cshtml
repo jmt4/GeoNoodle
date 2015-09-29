@@ -6,20 +6,30 @@
 
 <h2>Statistics</h2>
 
-<p>Statistics introduction paragraph goes here.</p>
+<p>The various statistic pages allow you to compare careers based on various aspects.</p>
 
-<h3>@Html.ActionLink("Job Pay","Paystats")</h3>
-<h4>PayImage</h4>
-<p>Pay statistics introduction paragraph goes here.</p>
+<h3>@Html.ActionLink("Job Pay","PayStats")</h3>
+<a href='@Url.Action("PayStats", "Statistics")'>
+  <img src='@Url.Content("~/Content/Images/jobpay.jpg")' />
+</a>
+<p>The job pay chart shows average salary for three different levels of pay for a career.</p>
+
 
 <h3>@Html.ActionLink("Trending Jobs", "TrendingJobs")</h3>
-<h4>TrendingJobsImage</h4>
-<p>Trending jobs statistics introduction paragraph goes here.</p>
+<a href='@Url.Action("TrendingJobs", "Statistics")'>
+  <img src='@Url.Content("~/Content/Images/trendingjob.jpg")' />
+</a>
+<p>Trending jobs page shows the availabilty of jobs for certain industries.</p>
+
 
 <h3>@Html.ActionLink("Job Location", "Location")</h3>
-<h4>JobLocationImage</h4>
+<a href='@Url.Action("Location", "Statistics")'>
+  <img src='@Url.Content("~/Content/Images/locations.jpg")' />
+</a>
 <p>The job location statistics page helps you determine which parts of the state 
     contain the jobs you are interested in and how many of those jobs currently exist.</p>
+
+
 
 @*
     <p>
